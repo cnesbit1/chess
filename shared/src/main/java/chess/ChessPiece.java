@@ -55,19 +55,78 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         switch (getPieceType()) {
             case KING:
-                return new ArrayList<>();
+                return getKingMoves(board, myPosition);
             case QUEEN:
-                return new ArrayList<>();
+                return getQueenMoves(board, myPosition);
             case BISHOP:
-                return new ArrayList<>();
+                return getBishopMoves(board, myPosition);
             case ROOK:
-                return new ArrayList<>();
+                return getRookMoves(board, myPosition);
             case KNIGHT:
-                return new ArrayList<>();
+                return getKnightMoves(board, myPosition);
             case PAWN:
-                return new ArrayList<>();
+                return getPawnMoves(board, myPosition);
         }
         return new ArrayList<>();
+    }
+
+    private Collection<ChessMove> getKingMoves(ChessBoard board, ChessPosition myPosition) {
+        // Implement logic for king moves
+        return new ArrayList<>();
+    }
+
+    private Collection<ChessMove> getQueenMoves(ChessBoard board, ChessPosition myPosition) {
+        // Implement logic for queen moves
+        return new ArrayList<>();
+    }
+
+    private Collection<ChessMove> getBishopMoves(ChessBoard board, ChessPosition myPosition) {
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        addDiagonalMoves(board, validMoves, myPosition,row - 1, col - 1, -1, -1);
+        addDiagonalMoves(board, validMoves, myPosition,row + 1, col + 1, 1,1);
+        addDiagonalMoves(board, validMoves, myPosition,row - 1, col + 1, -1, 1);
+        addDiagonalMoves(board, validMoves, myPosition,row + 1, col - 1, 1, -1);
+
+        return validMoves;
+    }
+
+    private void addDiagonalMoves(ChessBoard board, Collection<ChessMove> moves, ChessPosition myPosition, int row, int col, int hor, int ver) {
+        while (isValidPosition(row, col)) {
+            ChessPiece pieceAtPosition = board.getPiece(new ChessPosition(row, col));
+
+            if (pieceAtPosition == null || pieceAtPosition.getTeamColor() != getTeamColor()) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+            }
+
+            if (pieceAtPosition != null) {
+                break;
+            }
+
+            col = col + ver;
+            row = row + hor;
+        }
+    }
+
+    private Collection<ChessMove> getRookMoves(ChessBoard board, ChessPosition myPosition) {
+        // Implement logic for rook moves
+        return new ArrayList<>();
+    }
+
+    private Collection<ChessMove> getKnightMoves(ChessBoard board, ChessPosition myPosition) {
+        // Implement logic for knight moves
+        return new ArrayList<>();
+    }
+
+    private Collection<ChessMove> getPawnMoves(ChessBoard board, ChessPosition myPosition) {
+        // Implement logic for pawn moves
+        return new ArrayList<>();
+    }
+
+    private boolean isValidPosition(int row, int col) {
+        return row > 0 && row < 8 && col > 0 && col < 8;
     }
 
     public String toString() {
