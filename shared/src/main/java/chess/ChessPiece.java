@@ -87,8 +87,8 @@ public class ChessPiece {
 
         addDiagonalMoves(board, validMoves, myPosition,row - 1, col - 1, -1, -1);
         addDiagonalMoves(board, validMoves, myPosition,row + 1, col + 1, 1,1);
-        addDiagonalMoves(board, validMoves, myPosition,row - 1, col + 1, -1, 1);
         addDiagonalMoves(board, validMoves, myPosition,row + 1, col - 1, 1, -1);
+        addDiagonalMoves(board, validMoves, myPosition,row - 1, col + 1, -1, 1);
 
         return validMoves;
     }
@@ -133,5 +133,14 @@ public class ChessPiece {
         String actual_color = pieceColor.name();
         String actual_type = type.name();
         return String.format("-%s, %s-", actual_color, actual_type);
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
+
+        ChessPiece that = (ChessPiece) obj;
+
+        return pieceColor == that.pieceColor && type == that.type;
     }
 }
