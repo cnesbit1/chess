@@ -72,12 +72,56 @@ public class ChessPiece {
 
     private Collection<ChessMove> getKingMoves(ChessBoard board, ChessPosition myPosition) {
         // Implement logic for king moves
-        return new ArrayList<>();
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        if (isValidPosition(row, col + 1)) {
+            addKingMoves(board, myPosition, validMoves, row, col + 1);
+        } if (isValidPosition(row, col - 1)) {
+            addKingMoves(board, myPosition, validMoves, row, col - 1);
+        } if (isValidPosition(row - 1, col + 1)) {
+            addKingMoves(board, myPosition, validMoves, row - 1, col + 1);
+        } if (isValidPosition(row - 1, col)) {
+            addKingMoves(board, myPosition, validMoves, row - 1, col);
+        } if (isValidPosition(row - 1, col - 1)) {
+            addKingMoves(board, myPosition, validMoves, row - 1, col - 1);
+        } if (isValidPosition(row + 1, col + 1)) {
+            addKingMoves(board, myPosition, validMoves, row + 1, col + 1);
+        } if (isValidPosition(row + 1, col)) {
+            addKingMoves(board, myPosition, validMoves, row + 1, col);
+        } if (isValidPosition(row + 1, col - 1)) {
+            addKingMoves(board, myPosition, validMoves, row + 1, col - 1);
+        }
+
+        return validMoves;
+    }
+
+    private void addKingMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int row, int col) {
+        ChessPiece pieceAtPosition = board.getPiece(new ChessPosition(row, col));
+        if (pieceAtPosition == null) {
+            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+        } else if (pieceAtPosition.getTeamColor() != this.getTeamColor()) {
+            moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+        }
     }
 
     private Collection<ChessMove> getQueenMoves(ChessBoard board, ChessPosition myPosition) {
         // Implement logic for queen moves
-        return new ArrayList<>();
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        addLongMoves(board, validMoves, myPosition,row - 1, col - 1, -1, -1);
+        addLongMoves(board, validMoves, myPosition,row + 1, col + 1, 1,1);
+        addLongMoves(board, validMoves, myPosition,row + 1, col - 1, 1, -1);
+        addLongMoves(board, validMoves, myPosition,row - 1, col + 1, -1, 1);
+        addLongMoves(board, validMoves, myPosition, row, col - 1, 0, -1);
+        addLongMoves(board, validMoves, myPosition, row, col + 1, 0,1);
+        addLongMoves(board, validMoves, myPosition,row + 1, col, 1, 0);
+        addLongMoves(board, validMoves, myPosition,row - 1, col, -1, 0);
+
+        return validMoves;
     }
 
     private Collection<ChessMove> getBishopMoves(ChessBoard board, ChessPosition myPosition) {
@@ -85,34 +129,27 @@ public class ChessPiece {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
 
-        addDiagonalMoves(board, validMoves, myPosition,row - 1, col - 1, -1, -1);
-        addDiagonalMoves(board, validMoves, myPosition,row + 1, col + 1, 1,1);
-        addDiagonalMoves(board, validMoves, myPosition,row + 1, col - 1, 1, -1);
-        addDiagonalMoves(board, validMoves, myPosition,row - 1, col + 1, -1, 1);
+        addLongMoves(board, validMoves, myPosition,row - 1, col - 1, -1, -1);
+        addLongMoves(board, validMoves, myPosition,row + 1, col + 1, 1,1);
+        addLongMoves(board, validMoves, myPosition,row + 1, col - 1, 1, -1);
+        addLongMoves(board, validMoves, myPosition,row - 1, col + 1, -1, 1);
+
 
         return validMoves;
     }
-
-    private void addDiagonalMoves(ChessBoard board, Collection<ChessMove> moves, ChessPosition myPosition, int row, int col, int hor, int ver) {
-        while (isValidPosition(row, col)) {
-            ChessPiece pieceAtPosition = board.getPiece(new ChessPosition(row, col));
-
-            if (pieceAtPosition == null || pieceAtPosition.getTeamColor() != getTeamColor()) {
-                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
-            }
-
-            if (pieceAtPosition != null) {
-                break;
-            }
-
-            col = col + ver;
-            row = row + hor;
-        }
-    }
-
     private Collection<ChessMove> getRookMoves(ChessBoard board, ChessPosition myPosition) {
         // Implement logic for rook moves
-        return new ArrayList<>();
+        Collection<ChessMove> validMoves = new ArrayList<>();
+
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        addLongMoves(board, validMoves, myPosition, row, col - 1, 0, -1);
+        addLongMoves(board, validMoves, myPosition, row, col + 1, 0,1);
+        addLongMoves(board, validMoves, myPosition,row + 1, col, 1, 0);
+        addLongMoves(board, validMoves, myPosition,row - 1, col, -1, 0);
+
+        return validMoves;
     }
 
     private Collection<ChessMove> getKnightMoves(ChessBoard board, ChessPosition myPosition) {
@@ -121,12 +158,29 @@ public class ChessPiece {
     }
 
     private Collection<ChessMove> getPawnMoves(ChessBoard board, ChessPosition myPosition) {
+        // ChessPiece pieceAtPosition = board.getPiece(new ChessPosition(myPosition.getRow(), myPosition.getColumn()) + 1);
         // Implement logic for pawn moves
         return new ArrayList<>();
     }
+    private void addLongMoves(ChessBoard board, Collection<ChessMove> moves, ChessPosition myPosition, int row, int col, int hor, int ver) {
+        while (isValidPosition(row, col)) {
+            ChessPiece pieceAtPosition = board.getPiece(new ChessPosition(row, col));
+
+            if (pieceAtPosition == null) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+                col = col + ver;
+                row = row + hor;
+            } else if (pieceAtPosition.getTeamColor() != this.getTeamColor()) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
+                break;
+            } else { // Your own TEAM, same COLOR
+                break;
+            }
+        }
+    }
 
     private boolean isValidPosition(int row, int col) {
-        return row > 0 && row < 8 && col > 0 && col < 8;
+        return row > 0 && row <= 8 && col > 0 && col <= 8;
     }
 
     public String toString() {
