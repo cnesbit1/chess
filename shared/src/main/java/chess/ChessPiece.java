@@ -77,27 +77,27 @@ public class ChessPiece {
         int col = myPosition.getColumn();
 
         if (isValidPosition(row, col + 1)) {
-            addKingMoves(board, myPosition, validMoves, row, col + 1);
+            addShortMove(board, myPosition, validMoves, row, col + 1);
         } if (isValidPosition(row, col - 1)) {
-            addKingMoves(board, myPosition, validMoves, row, col - 1);
+            addShortMove(board, myPosition, validMoves, row, col - 1);
         } if (isValidPosition(row - 1, col + 1)) {
-            addKingMoves(board, myPosition, validMoves, row - 1, col + 1);
+            addShortMove(board, myPosition, validMoves, row - 1, col + 1);
         } if (isValidPosition(row - 1, col)) {
-            addKingMoves(board, myPosition, validMoves, row - 1, col);
+            addShortMove(board, myPosition, validMoves, row - 1, col);
         } if (isValidPosition(row - 1, col - 1)) {
-            addKingMoves(board, myPosition, validMoves, row - 1, col - 1);
+            addShortMove(board, myPosition, validMoves, row - 1, col - 1);
         } if (isValidPosition(row + 1, col + 1)) {
-            addKingMoves(board, myPosition, validMoves, row + 1, col + 1);
+            addShortMove(board, myPosition, validMoves, row + 1, col + 1);
         } if (isValidPosition(row + 1, col)) {
-            addKingMoves(board, myPosition, validMoves, row + 1, col);
+            addShortMove(board, myPosition, validMoves, row + 1, col);
         } if (isValidPosition(row + 1, col - 1)) {
-            addKingMoves(board, myPosition, validMoves, row + 1, col - 1);
+            addShortMove(board, myPosition, validMoves, row + 1, col - 1);
         }
 
         return validMoves;
     }
 
-    private void addKingMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int row, int col) {
+    private void addShortMove(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int row, int col) {
         ChessPiece pieceAtPosition = board.getPiece(new ChessPosition(row, col));
         if (pieceAtPosition == null) {
             moves.add(new ChessMove(myPosition, new ChessPosition(row, col), null));
@@ -154,7 +154,29 @@ public class ChessPiece {
 
     private Collection<ChessMove> getKnightMoves(ChessBoard board, ChessPosition myPosition) {
         // Implement logic for knight moves
-        return new ArrayList<>();
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+
+        if (isValidPosition(row - 2, col + 1)) {
+            addShortMove(board, myPosition, validMoves, row - 2, col + 1);
+        } if (isValidPosition(row - 2, col - 1)) {
+            addShortMove(board, myPosition, validMoves, row - 2, col - 1);
+        } if (isValidPosition(row + 2, col + 1)) {
+            addShortMove(board, myPosition, validMoves, row + 2, col + 1);
+        } if (isValidPosition(row + 2, col - 1)) {
+            addShortMove(board, myPosition, validMoves, row + 2, col - 1);
+        } if (isValidPosition(row + 1, col + 2)) {
+            addShortMove(board, myPosition, validMoves, row + 1, col + 2);
+        } if (isValidPosition(row - 1, col + 2)) {
+            addShortMove(board, myPosition, validMoves, row - 1, col + 2);
+        } if (isValidPosition(row + 1, col - 2)) {
+            addShortMove(board, myPosition, validMoves, row + 1, col - 2);
+        } if (isValidPosition(row - 1, col - 2)) {
+            addShortMove(board, myPosition, validMoves, row - 1, col - 2);
+        }
+
+        return validMoves;
     }
 
     private Collection<ChessMove> getPawnMoves(ChessBoard board, ChessPosition myPosition) {
