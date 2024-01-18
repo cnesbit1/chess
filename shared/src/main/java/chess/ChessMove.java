@@ -70,6 +70,7 @@ public class ChessMove {
         }
         if (promotionPiece != chessMove.promotionPiece)
             bol = false;
+
         return bol;
     }
 

@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -189,6 +190,10 @@ public class ChessPiece {
     private void whitePawnMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int row, int col) {
         ChessPiece rightPiece = board.getPiece(new ChessPosition(row + 1, col + 1));
         ChessPiece frontPiece = board.getPiece(new ChessPosition(row + 1, col));
+        ChessPiece doubleFrontPiece = null;
+        if (row == 2) {
+            doubleFrontPiece = board.getPiece(new ChessPosition(row + 2, col));
+        }
         ChessPiece leftPiece = board.getPiece(new ChessPosition(row + 1, col - 1));
 
         boolean noPromotion = true;
@@ -219,6 +224,9 @@ public class ChessPiece {
                     moves.add(new ChessMove(myPosition, new ChessPosition(row + 1, col), PieceType.BISHOP));
                     moves.add(new ChessMove(myPosition, new ChessPosition(row + 1, col), PieceType.KNIGHT));
                 }
+                if (row == 2 && doubleFrontPiece == null) {
+                    moves.add(new ChessMove(myPosition, new ChessPosition(row + 2, col), null));
+                }
             }
         }
         if (isValidPosition(row + 1, col - 1)) {
@@ -238,6 +246,10 @@ public class ChessPiece {
     private void blackPawnMoves(ChessBoard board, ChessPosition myPosition, Collection<ChessMove> moves, int row, int col) {
         ChessPiece rightPiece = board.getPiece(new ChessPosition(row - 1, col + 1));
         ChessPiece frontPiece = board.getPiece(new ChessPosition(row - 1, col));
+        ChessPiece doubleFrontPiece = null;
+        if (row == 7) {
+            doubleFrontPiece = board.getPiece(new ChessPosition(row - 2, col));
+        }
         ChessPiece leftPiece = board.getPiece(new ChessPosition(row - 1, col - 1));
 
         boolean noPromotion = true;
@@ -267,6 +279,9 @@ public class ChessPiece {
                     moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col), PieceType.QUEEN));
                     moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col), PieceType.BISHOP));
                     moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col), PieceType.KNIGHT));
+                }
+                if (row == 7 && doubleFrontPiece == null) {
+                    moves.add(new ChessMove(myPosition, new ChessPosition(row - 2, col), null));
                 }
             }
         }
@@ -327,5 +342,9 @@ public class ChessPiece {
         ChessPiece that = (ChessPiece) obj;
 
         return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 }
