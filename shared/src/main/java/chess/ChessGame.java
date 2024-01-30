@@ -100,6 +100,11 @@ public class ChessGame {
             throw new InvalidMoveException("Invalid move for the piece.");
         }
 
+        // if (isCastlingMove(move)) {
+            // performCastling(move);
+        //    return;
+        // }
+
         ChessBoard temp = gameBoard.copy();
         temp.addPiece(start, null);
         if (piece.getPieceType() == ChessPiece.PieceType.PAWN && piece.getTeamColor() == TeamColor.WHITE && end.getRow() == 8) {
@@ -125,6 +130,33 @@ public class ChessGame {
         if (this.turn == TeamColor.WHITE) { this.turn = TeamColor.BLACK; }
         else { this.turn = TeamColor.WHITE; };
     }
+
+    private boolean isCastlingMove(ChessMove move) {
+        ChessPiece piece = gameBoard.getPiece(move.getStartPosition());
+        if (piece.getTeamColor() == TeamColor.WHITE) {
+            return isCastlingWhiteQueenSide(move) || isCastlingWhiteKingSide(move);
+        }
+        else {
+            return isCastlingBlackQueenSide(move) || isCastlingBlackKingSide(move);
+        }
+    }
+
+    private boolean isCastlingWhiteQueenSide(ChessMove move) {
+        ChessPiece piece = gameBoard.getPiece(move.getStartPosition());
+        int end_col = move.getEndPosition().getColumn();
+        int start_col = move.getStartPosition().getColumn();
+
+        if (piece.getPieceType() != ChessPiece.PieceType.KING) { return false; }
+
+        if (Math.abs(end_col - start_col) != 2) { return false; }
+
+        return true;
+    }
+    private boolean isCastlingWhiteKingSide(ChessMove move) { return true; }
+
+    private boolean isCastlingBlackQueenSide(ChessMove move) { return true; }
+
+    private boolean isCastlingBlackKingSide(ChessMove move) { return true; }
 
     private boolean isValidMove(ChessPosition start, ChessPosition end, ChessPiece piece, ChessMove move) {
         if (piece == null) {
