@@ -78,13 +78,25 @@ public class ChessGame {
 
         ChessBoard temp = gameBoard.copy();
         temp.addPiece(start, null);
-        temp.addPiece(end, piece);
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN && piece.getTeamColor() == TeamColor.WHITE && end.getRow() == 8) {
+            temp.addPiece(end, new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+        }
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN && piece.getTeamColor() == TeamColor.BLACK && end.getRow() == 1) {
+            temp.addPiece(end, new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+        }
+        else { temp.addPiece(end, piece); }
         ChessGame tempGame = new ChessGame(turn, temp);
 
         if (tempGame.isInCheck(turn)) { throw new InvalidMoveException("My king is left in check"); }
 
         gameBoard.addPiece(start, null);
-        gameBoard.addPiece(end, piece);
+        if (piece.getPieceType() == ChessPiece.PieceType.PAWN && piece.getTeamColor() == TeamColor.WHITE && end.getRow() == 8) {
+            gameBoard.addPiece(end, new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+        }
+        else if (piece.getPieceType() == ChessPiece.PieceType.PAWN && piece.getTeamColor() == TeamColor.BLACK && end.getRow() == 1) {
+            gameBoard.addPiece(end, new ChessPiece(piece.getTeamColor(), move.getPromotionPiece()));
+        }
+        else { gameBoard.addPiece(end, piece); }
 
         if (this.turn == TeamColor.WHITE) { this.turn = TeamColor.BLACK; }
         else { this.turn = TeamColor.WHITE; };
