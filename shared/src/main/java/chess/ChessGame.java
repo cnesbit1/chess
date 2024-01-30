@@ -43,6 +43,20 @@ public class ChessGame {
     }
 
     /**
+     * Sets this game's chessboard with a given board
+     *
+     * @param board the new board to use
+     */
+    public void setBoard(ChessBoard board) { this.gameBoard = board; }
+
+    /**
+     * Gets the current chessboard
+     *
+     * @return the chessboard
+     */
+    public ChessBoard getBoard() { return this.gameBoard; }
+
+    /**
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
@@ -96,7 +110,7 @@ public class ChessGame {
 
         simulateBoardWithMove(start, end, piece, move);
         updateBoardWithMove(start, end, piece, move);
-        switchTurn(this.turn);
+        switchTurn(getTeamTurn());
     }
 
     private void simulateBoardWithMove(ChessPosition start, ChessPosition end, ChessPiece piece, ChessMove move) throws InvalidMoveException {
@@ -126,14 +140,14 @@ public class ChessGame {
 
     private boolean isValidMove(ChessPosition start, ChessPosition end, ChessPiece piece, ChessMove move) {
         if (piece == null) { return false; }
-        if (piece.getTeamColor() != this.turn) { return false; }
+        if (piece.getTeamColor() != getTeamTurn()) { return false; }
         Collection<ChessMove> possibleMoves = piece.pieceMoves(gameBoard, start);
         return possibleMoves != null && possibleMoves.contains(move);
     }
 
     private void switchTurn(TeamColor color) {
-        if (color == TeamColor.WHITE) { this.turn = TeamColor.BLACK; }
-        else { this.turn = TeamColor.WHITE; };
+        if (color == TeamColor.WHITE) { setTeamTurn(TeamColor.BLACK); }
+        else { setTeamTurn(TeamColor.WHITE); };
     }
 
     /**
@@ -161,9 +175,7 @@ public class ChessGame {
         }
 
         for (ChessMove move : allMoves) {
-            if (move.getEndPosition().equals(king_pos)) {
-                return true;
-            }
+            if (move.getEndPosition().equals(king_pos)) { return true; }
         }
         return false;
     }
@@ -218,18 +230,4 @@ public class ChessGame {
         }
         return true;
     }
-
-    /**
-     * Sets this game's chessboard with a given board
-     *
-     * @param board the new board to use
-     */
-    public void setBoard(ChessBoard board) { this.gameBoard = board; }
-
-    /**
-     * Gets the current chessboard
-     *
-     * @return the chessboard
-     */
-    public ChessBoard getBoard() { return this.gameBoard; }
 }

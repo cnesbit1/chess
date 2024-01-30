@@ -10,29 +10,7 @@ import java.util.Arrays;
  */
 public class ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[8][8];
-    public ChessBoard() {
-    }
-
-    /**
-     * Creates a deep copy of the current chessboard.
-     *
-     * @return A new instance of ChessBoard containing the same pieces as the original board.
-     */
-    public ChessBoard copy() {
-        ChessBoard copiedBoard = new ChessBoard();
-
-        // Copy each piece from the original board to the copied board
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                ChessPiece originalPiece = this.squares[row][col];
-                if (originalPiece != null) {
-                    copiedBoard.squares[row][col] = new ChessPiece(originalPiece.getTeamColor(), originalPiece.getPieceType());
-                }
-            }
-        }
-
-        return copiedBoard;
-    }
+    public ChessBoard() {}
 
     /**
      * Adds a chess piece to the chessboard
@@ -53,6 +31,35 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow() - 1][position.getColumn() - 1];
+    }
+
+    /**
+     * Creates a deep copy of the current chessboard.
+     *
+     * @return A new instance of ChessBoard containing the same pieces as the original board.
+     */
+    public ChessBoard copy() {
+        ChessBoard copiedBoard = new ChessBoard();
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPiece originalPiece = this.squares[row][col];
+                if (originalPiece != null) {
+                    copiedBoard.squares[row][col] = new ChessPiece(originalPiece.getTeamColor(), originalPiece.getPieceType());
+                }
+            }
+        }
+
+        return copiedBoard;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        ChessBoard otherBoard = (ChessBoard) obj;
+
+        return Arrays.deepEquals(this.squares, otherBoard.squares);
     }
 
     /**
@@ -93,14 +100,5 @@ public class ChessBoard {
         // Add Kings
         addPiece(new ChessPosition(8, 5), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
         addPiece(new ChessPosition(1, 5), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
-    }
-    
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        ChessBoard otherBoard = (ChessBoard) obj;
-
-        return Arrays.deepEquals(this.squares, otherBoard.squares);
     }
 }

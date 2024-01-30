@@ -50,9 +50,7 @@ public class ChessMove {
         if (promotionPiece != null) {
             formatted_move += String.format(" promoted to %s}", promotionPiece);
         }
-        else {
-            formatted_move += "}";
-        }
+        else { formatted_move += "}"; }
         return formatted_move;
     }
 
@@ -68,8 +66,7 @@ public class ChessMove {
         if (endPosition.getRow() != chessMove.endPosition.getRow() || endPosition.getColumn() != chessMove.endPosition.getColumn()) {
             bol = false;
         }
-        if (promotionPiece != chessMove.promotionPiece)
-            bol = false;
+        if (promotionPiece != chessMove.promotionPiece)  bol = false;
 
         return bol;
     }
