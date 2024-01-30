@@ -11,7 +11,27 @@ import java.util.Arrays;
 public class ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[8][8];
     public ChessBoard() {
-        
+    }
+
+    /**
+     * Creates a deep copy of the current chessboard.
+     *
+     * @return A new instance of ChessBoard containing the same pieces as the original board.
+     */
+    public ChessBoard copy() {
+        ChessBoard copiedBoard = new ChessBoard();
+
+        // Copy each piece from the original board to the copied board
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                ChessPiece originalPiece = this.squares[row][col];
+                if (originalPiece != null) {
+                    copiedBoard.squares[row][col] = new ChessPiece(originalPiece.getTeamColor(), originalPiece.getPieceType());
+                }
+            }
+        }
+
+        return copiedBoard;
     }
 
     /**
