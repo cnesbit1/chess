@@ -168,12 +168,12 @@ public class ChessGame {
 
                 if (currPiece != null && currPiece.getTeamColor() == teamColor) {
                     Collection<ChessMove> pieceMoves = currPiece.pieceMoves(gameBoard, currPos);
-
+                    ChessGame newGame;
                     // Check each move to see if it takes the team out of check
                     for (ChessMove move : pieceMoves) {
                         ChessBoard temp = gameBoard.copy(); // Create a temporary copy of the board
                         try {
-                            ChessGame newGame = new ChessGame(teamColor, temp);
+                            newGame = new ChessGame(teamColor, temp);
                             newGame.makeMove(move);
                              // Make the move on the temporary board
                         } catch (InvalidMoveException e) {
@@ -182,7 +182,7 @@ public class ChessGame {
                         }
 
                         // If the team is not in check after making the move, it's not in checkmate
-                        if (!isInCheck(teamColor)) {
+                        if (!newGame.isInCheck(teamColor)) {
                             return false;
                         }
                     }
@@ -212,12 +212,12 @@ public class ChessGame {
 
                 if (currPiece != null && currPiece.getTeamColor() == teamColor) {
                     Collection<ChessMove> pieceMoves = currPiece.pieceMoves(gameBoard, currPos);
-
+                    ChessGame newGame;
                     // Check each move to see if it takes the team out of check
                     for (ChessMove move : pieceMoves) {
                         ChessBoard temp = gameBoard.copy(); // Create a temporary copy of the board
                         try {
-                            ChessGame newGame = new ChessGame(teamColor, temp);
+                            newGame = new ChessGame(teamColor, temp);
                             newGame.makeMove(move);
                             // Make the move on the temporary board
                         } catch (InvalidMoveException e) {
@@ -225,8 +225,8 @@ public class ChessGame {
                             continue;
                         }
 
-                        // If the team is not in check after making the move, it's not in checkmate
-                        if (!isInCheck(teamColor)) {
+                        // If the team is not in check after making the move, it's not in stalemate
+                        if (!newGame.isInCheck(teamColor)) {
                             return false;
                         }
                     }
