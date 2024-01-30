@@ -100,11 +100,6 @@ public class ChessGame {
             throw new InvalidMoveException("Invalid move for the piece.");
         }
 
-        // if (isCastlingMove(move)) {
-            // performCastling(move);
-        //    return;
-        // }
-
         ChessBoard temp = gameBoard.copy();
         temp.addPiece(start, null);
         if (piece.getPieceType() == ChessPiece.PieceType.PAWN && piece.getTeamColor() == TeamColor.WHITE && end.getRow() == 8) {
@@ -130,33 +125,6 @@ public class ChessGame {
         if (this.turn == TeamColor.WHITE) { this.turn = TeamColor.BLACK; }
         else { this.turn = TeamColor.WHITE; };
     }
-
-    private boolean isCastlingMove(ChessMove move) {
-        ChessPiece piece = gameBoard.getPiece(move.getStartPosition());
-        if (piece.getTeamColor() == TeamColor.WHITE) {
-            return isCastlingWhiteQueenSide(move) || isCastlingWhiteKingSide(move);
-        }
-        else {
-            return isCastlingBlackQueenSide(move) || isCastlingBlackKingSide(move);
-        }
-    }
-
-    private boolean isCastlingWhiteQueenSide(ChessMove move) {
-        ChessPiece piece = gameBoard.getPiece(move.getStartPosition());
-        int end_col = move.getEndPosition().getColumn();
-        int start_col = move.getStartPosition().getColumn();
-
-        if (piece.getPieceType() != ChessPiece.PieceType.KING) { return false; }
-
-        if (Math.abs(end_col - start_col) != 2) { return false; }
-
-        return true;
-    }
-    private boolean isCastlingWhiteKingSide(ChessMove move) { return true; }
-
-    private boolean isCastlingBlackQueenSide(ChessMove move) { return true; }
-
-    private boolean isCastlingBlackKingSide(ChessMove move) { return true; }
 
     private boolean isValidMove(ChessPosition start, ChessPosition end, ChessPiece piece, ChessMove move) {
         if (piece == null) {
@@ -216,38 +184,7 @@ public class ChessGame {
             return false; // If not in check, not in checkmate
         }
 
-        // Iterate through all possible moves and check if any move gets the team out of check
-        for (int x = 1; x <= 8; x++) {
-            for (int y = 1; y <= 8; y++) {
-                ChessPiece currPiece = gameBoard.getPiece(new ChessPosition(x, y));
-                ChessPosition currPos = new ChessPosition(x, y);
-
-                if (currPiece != null && currPiece.getTeamColor() == teamColor) {
-                    Collection<ChessMove> pieceMoves = currPiece.pieceMoves(gameBoard, currPos);
-                    ChessGame newGame;
-                    // Check each move to see if it takes the team out of check
-                    for (ChessMove move : pieceMoves) {
-                        ChessBoard temp = gameBoard.copy(); // Create a temporary copy of the board
-                        try {
-                            newGame = new ChessGame(teamColor, temp);
-                            newGame.makeMove(move);
-                             // Make the move on the temporary board
-                        } catch (InvalidMoveException e) {
-                            // Move is invalid, continue to the next move
-                            continue;
-                        }
-
-                        // If the team is not in check after making the move, it's not in checkmate
-                        if (!newGame.isInCheck(teamColor)) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-
-        // If no move can take the team out of check, it's in checkmate
-        return true;
+        return isInMate(teamColor);
     }
 
     /**
@@ -260,6 +197,10 @@ public class ChessGame {
     public boolean isInStalemate(TeamColor teamColor) {
         if (isInCheck(teamColor)) { return false; }
 
+        return isInMate(teamColor);
+    }
+
+    private boolean isInMate(TeamColor teamColor) {
         // Iterate through all possible moves and check if any move gets the team out of check
         for (int x = 1; x <= 8; x++) {
             for (int y = 1; y <= 8; y++) {
@@ -289,7 +230,6 @@ public class ChessGame {
                 }
             }
         }
-
         return true;
     }
 
@@ -298,16 +238,12 @@ public class ChessGame {
      *
      * @param board the new board to use
      */
-    public void setBoard(ChessBoard board) {
-        this.gameBoard = board;
-    }
+    public void setBoard(ChessBoard board) { this.gameBoard = board; }
 
     /**
      * Gets the current chessboard
      *
      * @return the chessboard
      */
-    public ChessBoard getBoard() {
-        return this.gameBoard;
-    }
+    public ChessBoard getBoard() { return this.gameBoard; }
 }

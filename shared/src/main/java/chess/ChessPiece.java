@@ -54,21 +54,14 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        switch (getPieceType()) {
-            case KING:
-                return getKingMoves(board, myPosition);
-            case QUEEN:
-                return getQueenMoves(board, myPosition);
-            case BISHOP:
-                return getBishopMoves(board, myPosition);
-            case ROOK:
-                return getRookMoves(board, myPosition);
-            case KNIGHT:
-                return getKnightMoves(board, myPosition);
-            case PAWN:
-                return getPawnMoves(board, myPosition);
-        }
-        return new ArrayList<>();
+        return switch (getPieceType()) {
+            case KING -> getKingMoves(board, myPosition);
+            case QUEEN -> getQueenMoves(board, myPosition);
+            case BISHOP -> getBishopMoves(board, myPosition);
+            case ROOK -> getRookMoves(board, myPosition);
+            case KNIGHT -> getKnightMoves(board, myPosition);
+            case PAWN -> getPawnMoves(board, myPosition);
+        };
     }
 
     private Collection<ChessMove> getKingMoves(ChessBoard board, ChessPosition myPosition) {
