@@ -59,15 +59,14 @@ public class ChessGame {
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece piece = gameBoard.getPiece(startPosition);
-
         if (piece == null) { return Collections.emptyList(); }
+
+        this.turn = piece.getTeamColor();
 
         Collection<ChessMove> possibleMoves = piece.pieceMoves(gameBoard, startPosition);
         Collection<ChessMove> filteredMoves = new HashSet<>();
         ChessGame tempGame;
         for (ChessMove move : possibleMoves) {
-            ChessPosition endPosition = move.getEndPosition();
-
             // Simulate the move and check if it leaves the player's king in check
             ChessBoard tempBoard = gameBoard.copy();
             try {
