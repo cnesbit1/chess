@@ -1,13 +1,23 @@
 package dataAccess;
 
+import database.MemoryDatabase;
+
 public class GameDAO {
-    public void createGame() {}
 
-    public void getGame() {}
+    private MemoryDatabase memoryDatabase;
+    public GameDAO(MemoryDatabase memoryDatabase) {
+        this.memoryDatabase = memoryDatabase;
+    }
 
-    public void listGames() {}
+//    public void createGame() {}
+//
+//    public void getGame() {}
+//
+//    public void listGames() {}
+//
+//    public void updateGame() {}
 
-    public void updateGame() {}
-
-    public void clear() {}
+    public void clear() {
+        memoryDatabase.clearGames();
+    }
 }
