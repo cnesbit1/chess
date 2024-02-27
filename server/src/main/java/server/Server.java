@@ -8,6 +8,7 @@ import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import dataAccess.AuthDAO;
 
+import exceptions.NoAuthException;
 import handler.LogoutHandler;
 import handler.LoginHandler;
 import handler.ListGamesHandler;
@@ -57,11 +58,11 @@ public class Server {
         // Define your endpoints here
         Spark.delete("/db", this::clearApplication);
         Spark.post("/user", this::registerUser);
-//        Spark.post("/session", this::login);
-//        Spark.delete("/session", this::logout);
-//        Spark.get("/game", this::listGames);
-//        Spark.post("/game", this::createGame);
-//        Spark.put("/game", this::joinGame);
+        Spark.post("/session", this::login);
+        Spark.delete("/session", this::logout);
+        Spark.get("/game", this::listGames);
+        Spark.post("/game", this::createGame);
+        Spark.put("/game", this::joinGame);
     }
 
     public int port() {
@@ -81,25 +82,25 @@ public class Server {
         return RegisterHandler.handle(req, res, new UserService(this.userDAO, this.authDAO));
     }
 
-//    private Object login(Request req, Response res) throws ResponseException {
-//        return LoginHandler.handle(req, res, new UserService(this.userDAO, this.authDAO));
-//    }
-//
-//    private Object logout(Request req, Response res) throws ResponseException {
-//        return LogoutHandler.handle(req, res, new UserService(this.userDAO, this.authDAO));
-//    }
-//
-//    private Object listGames(Request req, Response res) throws ResponseException {
-//        return ListGamesHandler.handle(req, res, new GameService(this.gameDAO));
-//    }
-//
-//    private Object createGame(Request req, Response res) throws ResponseException {
-//        return CreateGameHandler.handle(req, res, new GameService(this.gameDAO));
-//    }
-//
-//    private Object joinGame(Request req, Response res) throws ResponseException {
-//        return JoinGameHandler.handle(req, res, new GameService(this.gameDAO));
-//    }
+    private Object login(Request req, Response res) throws ResponseException, DataAccessException {
+        return LoginHandler.handle(req, res, new UserService(this.userDAO, this.authDAO));
+    }
+
+    private Object logout(Request req, Response res) throws ResponseException, DataAccessException, NoAuthException {
+        return LogoutHandler.handle(req, res, new UserService(this.userDAO, this.authDAO));
+    }
+
+    private Object listGames(Request req, Response res) throws ResponseException, DataAccessException {
+        return ListGamesHandler.handle(req, res, new GameService(this.gameDAO, this.authDAO));
+    }
+
+    private Object createGame(Request req, Response res) throws ResponseException, DataAccessException {
+        return CreateGameHandler.handle(req, res, new GameService(this.gameDAO, this.authDAO));
+    }
+
+    private Object joinGame(Request req, Response res) throws ResponseException, DataAccessException {
+        return JoinGameHandler.handle(req, res, new GameService(this.gameDAO, this.authDAO));
+    }
 
     private void exceptionHandler(ResponseException ex, Request req, Response res) {
         res.status(ex.getStatusCode());

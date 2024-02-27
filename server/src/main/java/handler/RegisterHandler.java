@@ -20,15 +20,16 @@ public class RegisterHandler {
             String username = userData.username();
             String password = userData.password();
             String email = userData.email();
-            // if (username == null || password == null || email == null) { throw new IllegalArgumentException(); }
-            AuthData authData = userService.register(userData.username(), userData.password(), userData.email());
+            if (username == null || password == null || email == null) { throw new IllegalArgumentException(); }
+            if (username.isEmpty() || password.isEmpty() || email.isEmpty()) { throw new IllegalArgumentException(); }
+            AuthData authData = userService.register(username, password, email);
             res.status(200);
             return gson.toJson(authData);
         }
         catch (IllegalArgumentException e) {
             // Handle bad request (e.g., missing or invalid fields)
             res.status(400);
-            return new Gson().toJson(new AuthData("123", "321"));
+            return new Gson().toJson(new ErrorResponse("Error: invalid fields"));
         } catch (UsernameTakenException e) {
             // Handle case where username is already taken
             res.status(403);

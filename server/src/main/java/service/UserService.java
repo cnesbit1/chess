@@ -3,9 +3,14 @@ package service;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
 import dataAccess.AuthDAO;
+import exceptions.NoAuthException;
 import exceptions.UsernameTakenException;
+import exceptions.WrongPasswordException;
+import exceptions.NoUserException;
 import model.AuthData;
 import model.UserData;
+
+import java.util.Objects;
 
 public class UserService {
 
@@ -30,14 +35,20 @@ public class UserService {
         }
     }
 
-//    public AuthData login() {}
+    public AuthData login(String username, String password) throws DataAccessException, WrongPasswordException, NoUserException {
+        UserData userData = this.userAccess.getUser(username);
+        if (userData != null) {
+            if (Objects.equals(userData.password(), password)) {
+                return authAccess.createAuth(username);
+            }
+            throw new WrongPasswordException();
+        }
+        else {
+            throw new NoUserException();
+        }
+    }
 
-//
-//    public void getAuth() {
-//        authAccess.getAuth();
-//    }
-//
-//    public void deleteAuth() {
-//        authAccess.deleteAuth();
-//    }
+    public void logout(String authToken) throws NoAuthException {
+        this.authAccess.deleteAuth(authToken);
+    }
 }

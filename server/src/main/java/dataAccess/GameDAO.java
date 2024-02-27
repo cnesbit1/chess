@@ -1,6 +1,9 @@
 package dataAccess;
 
 import database.MemoryDatabase;
+import model.GameData;
+
+import java.util.Map;
 
 public class GameDAO {
 
@@ -9,13 +12,25 @@ public class GameDAO {
         this.memoryDatabase = memoryDatabase;
     }
 
-//    public void createGame() {}
-//
-//    public void getGame() {}
-//
-//    public void listGames() {}
-//
-//    public void updateGame() {}
+    public void createGame(GameData gameData) {
+        memoryDatabase.createGame(gameData);
+    }
+
+    public GameData getGame(int gameID) {
+        return memoryDatabase.getGame(gameID);
+    }
+
+    public Map<Integer, GameData> listGames() {
+        return memoryDatabase.listGames();
+    }
+
+    public void joinGame(String username, int gameID, String clientColor) {
+        memoryDatabase.updateGame(username, gameID, clientColor);
+    }
+
+    public boolean userExists(String username, int gameID, String clientColor) {
+        return memoryDatabase.userExistsInGame(username, gameID, clientColor);
+    }
 
     public void clear() {
         memoryDatabase.clearGames();

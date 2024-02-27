@@ -1,6 +1,7 @@
 package dataAccess;
 
 import database.MemoryDatabase;
+import exceptions.NoAuthException;
 import model.AuthData;
 
 public class AuthDAO {
@@ -14,10 +15,14 @@ public class AuthDAO {
     public AuthData createAuth(String username) {
         return memoryDatabase.createAuth(username);
     }
-//
-//    public void getAuth() {}
-//
-//    public void deleteAuth() {}
+
+    public AuthData getAuth(String authToken) {
+        return memoryDatabase.getAuth(authToken);
+    }
+
+    public void deleteAuth(String authToken) throws NoAuthException {
+        memoryDatabase.deleteAuth(authToken);
+    }
 
     public void clear() {
         memoryDatabase.clearAuths();
