@@ -5,6 +5,7 @@ import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
 import database.MemoryDatabase;
 import exceptions.UsernameTakenException;
+import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,27 +91,84 @@ public class GameServiceTest {
         gameDAO.createGame(new GameData(127, "fifthWhiteName", "fifthBlackName", "game5", new ChessGame()));
         gameDAO.createGame(new GameData(128, "sixthWhiteName", "sixthBlackName", "game6", new ChessGame()));
 
+        Collection<GameData> games = gameService.listGames(authToken);
+        assertNotNull(games);
+    }
+
+    @Test
+    public void testListGamesNoAuth() throws NoAuthException, UsernameTakenException, DataAccessException {
+        String username = "testUser";
+        String password = "password123";
+        String email = "test@example.com";
+        AuthData authData = this.userService.register(username, password, email);
+        String authToken = authData.authToken();
+        this.authDAO.deleteAuth(authToken);
+
+        gameDAO.createGame(new GameData(123, "firstWhiteName", "firstBlackName", "game1", new ChessGame()));
+        gameDAO.createGame(new GameData(124, "secondWhiteName", "secondBlackName", "game2", new ChessGame()));
+        gameDAO.createGame(new GameData(125, "thirdWhiteName", "thirdBlackName", "game3", new ChessGame()));
+        gameDAO.createGame(new GameData(126, "fourthWhiteName", "fourthBlackName", "game4", new ChessGame()));
+        gameDAO.createGame(new GameData(127, "fifthWhiteName", "fifthBlackName", "game5", new ChessGame()));
+        gameDAO.createGame(new GameData(128, "sixthWhiteName", "sixthBlackName", "game6", new ChessGame()));
+
         assertThrows(NoAuthException.class, () -> {
             gameService.listGames(authToken);
         });
     }
+    @Test
+    public void testJoinGameSuccess() throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException, UsernameTakenException {
+        String username = "testUser";
+        String password = "password123";
+        String email = "test@example.com";
+        AuthData authData = this.userService.register(username, password, email);
+        String authToken = authData.authToken();
 
-//    @Test
-//    public void testJoinGame_Success() throws NoGameException, NoAuthException, BadTeamColorException {
-//        // Arrange
-//        String authToken = "authToken";
-//        int gameId = 123;
-//        String clientColor = "white";
-//        AuthData authData = new AuthData(authToken, "username");
-//        GameData gameData = new GameData(gameId, null, null, "TestGame", null);
-//
-//        when(authDAO.getAuth(authToken)).thenReturn(authData);
-//        when(gameDAO.getGame(gameId)).thenReturn(gameData);
-//        when(gameDAO.userExists(authData.getUsername(), gameId, clientColor)).thenReturn(false);
-//
-//        // Act
-//        gameService.joinGame(authToken, gameId, clientColor);
-//
-//        // Assert: No exception should be thrown
-//    }
+        gameDAO.createGame(new GameData(123, "firstWhiteName", null, "game1", new ChessGame()));
+        gameService.joinGame(authToken, 123, "black");
+
+        assertEquals("testUser", gameDAO.getGame(123).blackUsername());
+    }
+
+    @Test
+    public void testJoinGameNoAuth() throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException, UsernameTakenException {
+        String username = "testUser";
+        String password = "password123";
+        String email = "test@example.com";
+        AuthData authData = this.userService.register(username, password, email);
+        String authToken = authData.authToken();
+        authDAO.deleteAuth(authToken);
+
+        gameDAO.createGame(new GameData(123, "firstWhiteName", null, "game1", new ChessGame()));
+        assertThrows(NoAuthException.class, () -> {
+            gameService.joinGame(authToken, 123, "black");
+        });
+    }
+
+    @Test
+    public void testJoinGameNoGame() throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException, UsernameTakenException {
+        String username = "testUser";
+        String password = "password123";
+        String email = "test@example.com";
+        AuthData authData = this.userService.register(username, password, email);
+        String authToken = authData.authToken();
+
+        assertThrows(NoGameException.class, () -> {
+            gameService.joinGame(authToken, 123, "black");
+        });
+    }
+
+    @Test
+    public void testJoinGameBadTeamColor() throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException, UsernameTakenException {
+        String username = "testUser";
+        String password = "password123";
+        String email = "test@example.com";
+        AuthData authData = this.userService.register(username, password, email);
+        String authToken = authData.authToken();
+        gameDAO.createGame(new GameData(123, "firstWhiteName", null, "game1", new ChessGame()));
+
+
+        assertThrows(BadTeamColorException.class, () -> {
+            gameService.joinGame(authToken, 123, "white");
+        });
+    }
 }
