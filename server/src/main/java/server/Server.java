@@ -1,6 +1,5 @@
 package server;
 
-import com.google.gson.Gson;
 import database.MemoryDatabase;
 
 import dataAccess.DataAccessException;
@@ -17,11 +16,6 @@ import handler.JoinGameHandler;
 import handler.RegisterHandler;
 import handler.ClearHandler;
 
-import model.AuthData;
-import model.UserData;
-import model.GameData;
-
-import server.ResponseException;
 import service.ClearService;
 import service.UserService;
 import service.GameService;
@@ -40,6 +34,7 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
         this.memoryDatabase = new MemoryDatabase();
         this.userDAO = new UserDAO(this.memoryDatabase);
         this.authDAO = new AuthDAO(this.memoryDatabase);
@@ -47,8 +42,6 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         registerEndpoints();
-
-        Spark.exception(ResponseException.class, this::exceptionHandler);
 
         Spark.awaitInitialization();
         return Spark.port();
@@ -63,10 +56,6 @@ public class Server {
         Spark.get("/game", this::listGames);
         Spark.post("/game", this::createGame);
         Spark.put("/game", this::joinGame);
-    }
-
-    public int port() {
-        return Spark.port();
     }
 
     public void stop() {
@@ -100,9 +89,5 @@ public class Server {
 
     private Object joinGame(Request req, Response res) throws ResponseException, DataAccessException {
         return JoinGameHandler.handle(req, res, new GameService(this.gameDAO, this.authDAO));
-    }
-
-    private void exceptionHandler(ResponseException ex, Request req, Response res) {
-        res.status(ex.getStatusCode());
     }
 }

@@ -9,6 +9,7 @@ import exceptions.NoGameException;
 import model.AuthData;
 import model.GameData;
 
+import java.util.Collection;
 import java.util.Map;
 
 
@@ -16,12 +17,11 @@ public class GameService {
     private final GameDAO gameAccess;
     private final AuthDAO authAccess;
 
-    private int gameID;
+    private static int gameID = 1;
 
     public GameService(GameDAO gameAccess, AuthDAO authAccess) {
         this.gameAccess = gameAccess;
         this.authAccess = authAccess;
-        this.gameID = 1;
     }
 
     public int createGame(String authToken, String gameName) throws NoGameException {
@@ -36,12 +36,10 @@ public class GameService {
         return gameData.gameID();
     }
 
-    public Map<Integer, GameData> listGames(String authToken) throws NoGameException {
+    public Collection<GameData> listGames(String authToken) throws NoGameException {
         if (this.authAccess.getAuth(authToken) == null) {
             throw new NoGameException();
         }
-
-
         return gameAccess.listGames();
     }
     public void joinGame(String authToken, int gameID, String clientColor) throws NoGameException, NoAuthException, BadTeamColorException {

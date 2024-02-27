@@ -3,7 +3,7 @@ package dataAccess;
 import database.MemoryDatabase;
 import model.GameData;
 
-import java.util.Map;
+import java.util.Collection;
 
 public class GameDAO {
 
@@ -20,7 +20,7 @@ public class GameDAO {
         return memoryDatabase.getGame(gameID);
     }
 
-    public Map<Integer, GameData> listGames() {
+    public Collection<GameData> listGames() {
         return memoryDatabase.listGames();
     }
 

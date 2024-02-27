@@ -8,6 +8,7 @@ import model.AuthData;
 
 import exceptions.NoAuthException;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,8 +39,8 @@ public class MemoryDatabase {
         games.put(gameData.gameID(), gameData);
     }
 
-    public Map<Integer, GameData> listGames() {
-        return this.games;
+    public Collection<GameData> listGames() {
+        return this.games.values();
     }
 
     public GameData getGame(int gameID) {

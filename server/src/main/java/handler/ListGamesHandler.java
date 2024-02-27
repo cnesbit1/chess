@@ -12,7 +12,6 @@ import spark.Request;
 import spark.Response;
 
 import java.util.Collection;
-import java.util.Map;
 
 public class ListGamesHandler {
     public static Object handle(Request req, Response res, GameService gameService) throws ResponseException, DataAccessException {
@@ -20,7 +19,7 @@ public class ListGamesHandler {
             Gson gson = new Gson();
             String authToken = req.headers("authorization");
 
-            Collection<GameData> games = gameService.listGames(authToken).values();
+            Collection<GameData> games = gameService.listGames(authToken);
             res.status(200);
             return gson.toJson(new ListGames(games));        }
         catch (NoGameException e) {
