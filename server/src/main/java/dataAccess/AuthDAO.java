@@ -4,6 +4,8 @@ import database.MemoryDatabase;
 import exceptions.NoAuthException;
 import model.AuthData;
 
+import java.util.Map;
+
 public class AuthDAO {
 
     private MemoryDatabase memoryDatabase;
@@ -26,5 +28,9 @@ public class AuthDAO {
 
     public void clear() {
         memoryDatabase.clearAuths();
+    }
+
+    public Map<String, AuthData> getAllAuths() {
+        return memoryDatabase.getAllAuths();
     }
 }

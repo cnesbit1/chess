@@ -3,6 +3,8 @@ import database.MemoryDatabase;
 import model.AuthData;
 import model.UserData;
 
+import java.util.Map;
+
 public class UserDAO {
     private MemoryDatabase memoryDatabase;
 
@@ -19,6 +21,10 @@ public class UserDAO {
     }
     public void createUser(UserData user) throws DataAccessException {
         memoryDatabase.createUser(user);
+    }
+
+    public Map<String, UserData>  getAllUsers() {
+        return memoryDatabase.getAllUsers();
     }
 
 }

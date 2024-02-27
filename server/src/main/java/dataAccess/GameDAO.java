@@ -4,6 +4,7 @@ import database.MemoryDatabase;
 import model.GameData;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class GameDAO {
 
@@ -34,5 +35,9 @@ public class GameDAO {
 
     public void clear() {
         memoryDatabase.clearGames();
+    }
+
+    public Map<Integer, GameData>  getAllGames() {
+        return memoryDatabase.getAllGames();
     }
 }

@@ -29,8 +29,8 @@ public class GameService {
             throw new NoGameException();
         }
         ChessGame game = new ChessGame();
-        int gameID = this.gameID;
-        this.gameID++;
+        int gameID = GameService.gameID;
+        GameService.gameID++;
         GameData gameData = new GameData(gameID, null, null, gameName, game);
         gameAccess.createGame(gameData);
         return gameData.gameID();

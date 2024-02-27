@@ -99,4 +99,15 @@ public class MemoryDatabase {
         auths.clear();
     }
 
+    public Map<String, UserData> getAllUsers() {
+        return users;
+    }
+
+    public Map<Integer, GameData> getAllGames() {
+        return games;
+    }
+
+    public Map<String, AuthData> getAllAuths() {
+        return auths;
+    }
 }
