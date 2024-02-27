@@ -2,6 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
+import exceptions.NoAuthException;
 import exceptions.NoGameException;
 import model.GameData;
 import responses.ErrorResponse;
@@ -22,7 +23,7 @@ public class ListGamesHandler {
             Collection<GameData> games = gameService.listGames(authToken);
             res.status(200);
             return gson.toJson(new ListGames(games));        }
-        catch (NoGameException e) {
+        catch (NoAuthException e) {
             // Handle other errors with a generic description
             res.status(401);
             return new Gson().toJson(new ErrorResponse("Error: no matching game name"));

@@ -2,6 +2,7 @@ package handler;
 
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
+import exceptions.NoAuthException;
 import exceptions.NoGameException;
 import exceptions.NoUserException;
 import exceptions.WrongPasswordException;
@@ -24,11 +25,10 @@ public class CreateGameHandler {
             GameData gameData = gson.fromJson(req.body(), GameData.class);
             int gameID = gameService.createGame(authToken, gameData.gameName());
             res.status(200);
-            System.out.println(gameID);
-            return "{ gameID: " + gameID + " }";
-//            return gson.toJson(new GameID(gameID));
+//            return "{ gameID: " + gameID + " }";
+            return gson.toJson(new GameID(gameID));
         }
-        catch (NoGameException e) {
+        catch (NoAuthException e) {
             // Handle other errors with a generic description
             res.status(401);
             return new Gson().toJson(new ErrorResponse("Error: no matching game name"));

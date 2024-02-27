@@ -24,9 +24,9 @@ public class GameService {
         this.authAccess = authAccess;
     }
 
-    public int createGame(String authToken, String gameName) throws NoGameException {
+    public int createGame(String authToken, String gameName) throws NoAuthException {
         if (this.authAccess.getAuth(authToken) == null || gameName.isEmpty()) {
-            throw new NoGameException();
+            throw new NoAuthException();
         }
         ChessGame game = new ChessGame();
         int gameID = GameService.gameID;
@@ -36,9 +36,9 @@ public class GameService {
         return gameData.gameID();
     }
 
-    public Collection<GameData> listGames(String authToken) throws NoGameException {
+    public Collection<GameData> listGames(String authToken) throws NoAuthException {
         if (this.authAccess.getAuth(authToken) == null) {
-            throw new NoGameException();
+            throw new NoAuthException();
         }
         return gameAccess.listGames();
     }
