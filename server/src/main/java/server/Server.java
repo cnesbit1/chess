@@ -8,6 +8,7 @@ import dataAccess.UserDAO;
 import dataAccess.AuthDAO;
 
 import exceptions.NoAuthException;
+import exceptions.ResponseException;
 import handler.LogoutHandler;
 import handler.LoginHandler;
 import handler.ListGamesHandler;

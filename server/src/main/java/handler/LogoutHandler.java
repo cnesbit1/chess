@@ -3,17 +3,12 @@ package handler;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import exceptions.NoAuthException;
-import exceptions.NoUserException;
-import exceptions.WrongPasswordException;
-import model.AuthData;
-import model.UserData;
 import responses.ErrorResponse;
 import responses.ResponseMessage;
-import server.ResponseException;
+import exceptions.ResponseException;
 import service.UserService;
 import spark.Request;
 import spark.Response;
-import responses.ResponseMessage;
 
 public class LogoutHandler {
     public static Object handle(Request req, Response res, UserService userService) throws ResponseException, DataAccessException, NoAuthException {

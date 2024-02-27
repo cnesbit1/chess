@@ -4,12 +4,11 @@ import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
-import server.ResponseException;
+import exceptions.ResponseException;
 import service.UserService;
 import spark.Request;
 import spark.Response;
 import exceptions.UsernameTakenException;
-import responses.ResponseMessage;
 import responses.ErrorResponse;
 
 public class RegisterHandler {

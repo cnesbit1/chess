@@ -9,7 +9,7 @@ import model.UserData;
 import org.junit.Before;
 import org.junit.Test;
 
-import server.ResponseException;
+import exceptions.ResponseException;
 import service.ClearService;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,7 +60,6 @@ public class ClearServiceTest {
             populateTestData();
             clearService.clearApplication();
 
-            // Assert that the database is empty after clearing
             assertEquals(0, gameDAO.getAllGames().size());
             assertEquals(0, userDAO.getAllUsers().size());
             assertEquals(0, authDAO.getAllAuths().size());

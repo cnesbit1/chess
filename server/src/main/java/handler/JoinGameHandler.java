@@ -8,7 +8,7 @@ import exceptions.NoGameException;
 import responses.ErrorResponse;
 import responses.JoinRequestData;
 import responses.ResponseMessage;
-import server.ResponseException;
+import exceptions.ResponseException;
 import service.GameService;
 import spark.Request;
 import spark.Response;
