@@ -10,6 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.UserService;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -19,7 +21,7 @@ public class UserServiceTest {
     private AuthDAO authDAO;
 
     @BeforeEach
-    public void setUp() throws DataAccessException {
+    public void setUp() throws DataAccessException, SQLException, ResponseException {
         MySQLDatabase mySQLDatabase = new MySQLDatabase();
         this.userDAO = new UserDAO(mySQLDatabase);
         this.authDAO = new AuthDAO(mySQLDatabase);
@@ -33,7 +35,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRegisterSuccess() throws DataAccessException, UsernameTakenException {
+    public void testRegisterSuccess() throws DataAccessException, UsernameTakenException, SQLException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
@@ -44,7 +46,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testRegisterUsernameTaken() throws UsernameTakenException, DataAccessException {
+    public void testRegisterUsernameTaken() throws UsernameTakenException, DataAccessException, SQLException {
         String username = "existingUser";
         String password = "password123";
         String email = "existing@example.com";
@@ -56,7 +58,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testLoginSuccess() throws DataAccessException, WrongPasswordException, NoUserException, UsernameTakenException, NoAuthException {
+    public void testLoginSuccess() throws DataAccessException, WrongPasswordException, NoUserException, UsernameTakenException, NoAuthException, SQLException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
@@ -71,7 +73,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testLoginWrongPassword() throws DataAccessException, NoUserException, UsernameTakenException, NoAuthException, WrongPasswordException {
+    public void testLoginWrongPassword() throws DataAccessException, NoUserException, UsernameTakenException, NoAuthException, WrongPasswordException, SQLException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
@@ -92,7 +94,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testLogoutSuccess() throws NoAuthException, NoUserException, DataAccessException, WrongPasswordException, UsernameTakenException {
+    public void testLogoutSuccess() throws NoAuthException, NoUserException, DataAccessException, WrongPasswordException, UsernameTakenException, SQLException {
 
         AuthData authData = userService.register("username", "password", "email@aol.com");
         String authToken = authData.authToken();
@@ -103,7 +105,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testLogoutNoAuth() throws NoAuthException, DataAccessException, UsernameTakenException {
+    public void testLogoutNoAuth() throws NoAuthException, DataAccessException, UsernameTakenException, SQLException {
 
         AuthData authData = userService.register("username", "password", "email@aol.com");
         String authToken = authData.authToken();

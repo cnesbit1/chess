@@ -26,7 +26,7 @@ public class ClearServiceTest {
     private AuthDAO authDAO;
 
     @Before
-    public void setUp() throws DataAccessException {
+    public void setUp() throws DataAccessException, SQLException, ResponseException {
         MySQLDatabase mySQLDatabase = new MySQLDatabase();
         this.gameDAO = new GameDAO(mySQLDatabase);
         this.userDAO = new UserDAO(mySQLDatabase);
@@ -67,7 +67,7 @@ public class ClearServiceTest {
             assertEquals(0, userDAO.getAllUsers().size());
             assertEquals(0, authDAO.getAllAuths().size());
 
-        } catch (ResponseException | DataAccessException e) {
+        } catch (ResponseException | DataAccessException | SQLException e) {
             throw new RuntimeException(e);
         }
     }

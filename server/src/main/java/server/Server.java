@@ -24,6 +24,8 @@ import service.GameService;
 
 import spark.*;
 
+import java.sql.SQLException;
+
 public class Server {
 
     private UserDAO userDAO;
@@ -32,7 +34,7 @@ public class Server {
 
     private database.MySQLDatabase mySQLDatabase;
 
-    public int run(int desiredPort) throws DataAccessException {
+    public int run(int desiredPort) throws DataAccessException, SQLException, ResponseException {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");

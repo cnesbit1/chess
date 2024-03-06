@@ -1,5 +1,6 @@
 package database;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import java.sql.SQLException;
@@ -112,6 +113,21 @@ public class MySQLDatabase {
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
+        var statement = "SELECT gameID, whiteusername, blackusername, gamename, chessgame FROM games WHERE gameid = ?";
+        try (var connection = DatabaseManager.getConnection()) {
+            try (var preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setInt(1, gameID);
+                try (var resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        ChessGame game = new Gson().fromJson(resultSet.getString("chessgame"), ChessGame.class);
+                        return new GameData(resultSet.getInt("gameid"), resultSet.getString("whiteusername"), resultSet.getString("blackusername"), resultSet.getString("gamename"), game);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Database Error");
+        }
+
         return null;
     }
 
@@ -127,10 +143,23 @@ public class MySQLDatabase {
     }
 
     public static AuthData getAuth(String authToken) throws DataAccessException {
+        var statement = "SELECT username, authtoken FROM auth WHERE authtoken = ?";
+        try (var connection = DatabaseManager.getConnection()) {
+            try (var preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setString(1, authToken);
+                try (var resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return new AuthData(resultSet.getString("username"), resultSet.getString("authtoken"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Database Error");
+        }
         return null;
     }
 
-    public static void deleteAuth(String authToken) throws DataAccessException {
+        public static void deleteAuth(String authToken) throws DataAccessException {
         var statement = "DELETE FROM auth WHERE authtoken = ?";
         try (var connection = DatabaseManager.getConnection()) {
             try (var preparedStatement = connection.prepareStatement(statement)) {
@@ -156,7 +185,9 @@ public class MySQLDatabase {
     }
 
     public void clear() throws DataAccessException {
-
+        clearAuths();
+        clearUsers();
+        clearGames();
     }
 
     public Map<Integer, GameData> getAllGames() {

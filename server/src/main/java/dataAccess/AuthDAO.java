@@ -5,6 +5,7 @@ import database.MySQLDatabase;
 import exceptions.NoAuthException;
 import model.AuthData;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public class AuthDAO {
@@ -19,7 +20,7 @@ public class AuthDAO {
         return MySQLDatabase.createAuth(username);
     }
 
-    public AuthData getAuth(String authToken) throws DataAccessException {
+    public AuthData getAuth(String authToken) throws DataAccessException, SQLException {
         return MySQLDatabase.getAuth(authToken);
     }
 

@@ -10,6 +10,7 @@ import exceptions.NoGameException;
 import model.AuthData;
 import model.GameData;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class GameService {
         this.authAccess = authAccess;
     }
 
-    public int createGame(String authToken, String gameName) throws NoAuthException, DataAccessException {
+    public int createGame(String authToken, String gameName) throws NoAuthException, DataAccessException, SQLException {
         if (this.authAccess.getAuth(authToken) == null || gameName.isEmpty()) {
             throw new NoAuthException();
         }
@@ -37,13 +38,13 @@ public class GameService {
         return gameData.gameID();
     }
 
-    public Collection<GameData> listGames(String authToken) throws NoAuthException, DataAccessException {
+    public Collection<GameData> listGames(String authToken) throws NoAuthException, DataAccessException, SQLException {
         if (this.authAccess.getAuth(authToken) == null) {
             throw new NoAuthException();
         }
         return gameAccess.listGames();
     }
-    public void joinGame(String authToken, int gameID, String clientColor) throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException {
+    public void joinGame(String authToken, int gameID, String clientColor) throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException, SQLException {
         AuthData authData = authAccess.getAuth(authToken);
         if (authData == null) {
             throw new NoAuthException();
