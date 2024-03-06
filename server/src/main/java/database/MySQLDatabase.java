@@ -1,5 +1,6 @@
 package database;
 
+import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import java.sql.SQLException;
 
@@ -14,73 +15,100 @@ import java.util.Map;
 // Implementation for MySQL Database
 public class MySQLDatabase {
 
-    private final String[] createStatements = {
+    private static final String[] createStatements = {
             """
-            CREATE TABLE IF NOT EXISTS  pet (
-              `id` int NOT NULL AUTO_INCREMENT,
-              `name` varchar(256) NOT NULL,
-              `type` ENUM('CAT', 'DOG', 'FISH', 'FROG', 'ROCK') DEFAULT 'CAT',
-              `json` TEXT DEFAULT NULL,
-              PRIMARY KEY (`id`),
-              INDEX(type),
-              INDEX(name)
+            CREATE TABLE IF NOT EXISTS users (
+                username VARCHAR(256) PRIMARY KEY NOT NULL UNIQUE,
+                password VARCHAR(256) NOT NULL,
+                email VARCHAR(256) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """,
 
             """
-            CREATE TABLE IF NOT EXISTS  pet (
-              `id` int NOT NULL AUTO_INCREMENT,
-              `name` varchar(256) NOT NULL,
-              `type` ENUM('CAT', 'DOG', 'FISH', 'FROG', 'ROCK') DEFAULT 'CAT',
-              `json` TEXT DEFAULT NULL,
-              PRIMARY KEY (`id`),
-              INDEX(type),
-              INDEX(name)
+            CREATE TABLE IF NOT EXISTS auth (
+                username VARCHAR(256) NOT NULL,
+                authtoken VARCHAR(256) PRIMARY KEY NOT NULL UNIQUE,
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """,
 
             """
-            CREATE TABLE IF NOT EXISTS  pet (
-              `id` int NOT NULL AUTO_INCREMENT,
-              `name` varchar(256) NOT NULL,
-              `type` ENUM('CAT', 'DOG', 'FISH', 'FROG', 'ROCK') DEFAULT 'CAT',
-              `json` TEXT DEFAULT NULL,
-              PRIMARY KEY (`id`),
-              INDEX(type),
-              INDEX(name)
+            CREATE TABLE IF NOT EXISTS games (
+              gameid INT PRIMARY KEY NOT NULL UNIQUE,
+              whiteusername VARCHAR(256),
+              blackusername VARCHAR(256),
+              gamename VARCHAR(256) NOT NULL,
+              chessgame JSON NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
     };
 
     public MySQLDatabase() throws DataAccessException, SQLException, ResponseException {
         DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
+        try (var connection = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
+                try (var preparedStatement = connection.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
                 }
             }
         } catch (SQLException ex) {
-            throw new ResponseException(String.format("Unable to configure database: %s", ex.getMessage()), 500);
+            throw new DataAccessException("Database Error");
         }
 
     }
 
     public void createUser(UserData userData) throws DataAccessException, SQLException {
+        var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         try (var connection = DatabaseManager.getConnection()) {
+            try (var preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setString(1, userData.username());
+                preparedStatement.setString(2, userData.password());
+                preparedStatement.setString(3, userData.email());
 
+                preparedStatement.executeUpdate();
+            }
         }
-        catch (SQLException | DataAccessException e) {
-            System.out.println(e);
+        catch (SQLException e) {
+            throw new DataAccessException("Database Error");
         }
     }
 
     public UserData getUser(String username) throws DataAccessException {
+        var statement = "SELECT username, password, email FROM users WHERE username = ?";
+        try (var connection = DatabaseManager.getConnection()) {
+
+            try (var preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setString(1, username);
+                try (var resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return new UserData(resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("email"));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Database Error");
+        }
+
         return null;
     }
 
     public void createGame(GameData game) throws DataAccessException {
+        var statement = "INSERT INTO games (gameid, whiteusername, blackusername, gamename, chessgame) VALUES (?, ?, ?, ?, ?)";
 
+        try (var connection = DatabaseManager.getConnection()) {
+            try (var preparedStatement = connection.prepareStatement(statement)) {
+
+                preparedStatement.setInt(1, game.gameID());
+                preparedStatement.setString(2, game.whiteUsername());
+                preparedStatement.setString(3, game.blackUsername());
+                preparedStatement.setString(4, game.gameName());
+                preparedStatement.setString(5, new Gson().toJson(game.game()));
+
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            throw new DataAccessException("Database Error");
+        }
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
@@ -103,6 +131,16 @@ public class MySQLDatabase {
     }
 
     public static void deleteAuth(String authToken) throws DataAccessException {
+        var statement = "DELETE FROM auth WHERE authtoken = ?";
+        try (var connection = DatabaseManager.getConnection()) {
+            try (var preparedStatement = connection.prepareStatement(statement)) {
+                preparedStatement.setString(1, authToken);
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            ;throw new DataAccessException("Database Error");
+        }
 
     }
 
