@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import dataAccess.AuthDAO;
 import exceptions.BadTeamColorException;
@@ -24,7 +25,7 @@ public class GameService {
         this.authAccess = authAccess;
     }
 
-    public int createGame(String authToken, String gameName) throws NoAuthException {
+    public int createGame(String authToken, String gameName) throws NoAuthException, DataAccessException {
         if (this.authAccess.getAuth(authToken) == null || gameName.isEmpty()) {
             throw new NoAuthException();
         }
@@ -36,13 +37,13 @@ public class GameService {
         return gameData.gameID();
     }
 
-    public Collection<GameData> listGames(String authToken) throws NoAuthException {
+    public Collection<GameData> listGames(String authToken) throws NoAuthException, DataAccessException {
         if (this.authAccess.getAuth(authToken) == null) {
             throw new NoAuthException();
         }
         return gameAccess.listGames();
     }
-    public void joinGame(String authToken, int gameID, String clientColor) throws NoGameException, NoAuthException, BadTeamColorException {
+    public void joinGame(String authToken, int gameID, String clientColor) throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException {
         AuthData authData = authAccess.getAuth(authToken);
         if (authData == null) {
             throw new NoAuthException();

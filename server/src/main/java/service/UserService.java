@@ -48,7 +48,7 @@ public class UserService {
         }
     }
 
-    public void logout(String authToken) throws NoAuthException {
+    public void logout(String authToken) throws NoAuthException, DataAccessException {
         this.authAccess.deleteAuth(authToken);
     }
 }

@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
 import database.MemoryDatabase;
+import database.MySQLDatabase;
 import exceptions.UsernameTakenException;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
@@ -32,10 +33,10 @@ public class GameServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MemoryDatabase memoryDatabase = new MemoryDatabase();
-        this.gameDAO = new GameDAO(memoryDatabase);
-        this.authDAO = new AuthDAO(memoryDatabase);
-        this.userDAO = new UserDAO(memoryDatabase);
+        MySQLDatabase mySQLDatabase = new MySQLDatabase();
+        this.gameDAO = new GameDAO(mySQLDatabase);
+        this.authDAO = new AuthDAO(mySQLDatabase);
+        this.userDAO = new UserDAO(mySQLDatabase);
         this.gameService = new GameService(gameDAO, authDAO);
         this.userService = new UserService(userDAO, authDAO);
     }

@@ -2,6 +2,7 @@ import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
 import database.MemoryDatabase;
+import database.MySQLDatabase;
 import exceptions.*;
 import model.AuthData;
 import org.junit.jupiter.api.AfterEach;
@@ -19,9 +20,9 @@ public class UserServiceTest {
 
     @BeforeEach
     public void setUp() {
-        MemoryDatabase memoryDatabase = new MemoryDatabase();
-        this.userDAO = new UserDAO(memoryDatabase);
-        this.authDAO = new AuthDAO(memoryDatabase);
+        MySQLDatabase mySQLDatabase = new MySQLDatabase();
+        this.userDAO = new UserDAO(mySQLDatabase);
+        this.authDAO = new AuthDAO(mySQLDatabase);
         this.userService = new UserService(userDAO, authDAO);
     }
 

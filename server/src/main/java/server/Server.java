@@ -7,6 +7,7 @@ import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import dataAccess.AuthDAO;
 
+import database.MySQLDatabase;
 import exceptions.NoAuthException;
 import exceptions.ResponseException;
 import handler.LogoutHandler;
@@ -29,17 +30,17 @@ public class Server {
     private GameDAO gameDAO;
     private AuthDAO authDAO;
 
-    private MemoryDatabase memoryDatabase;
+    private database.MySQLDatabase mySQLDatabase;
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
 
-        this.memoryDatabase = new MemoryDatabase();
-        this.userDAO = new UserDAO(this.memoryDatabase);
-        this.authDAO = new AuthDAO(this.memoryDatabase);
-        this.gameDAO = new GameDAO(this.memoryDatabase);
+        this.mySQLDatabase = new MySQLDatabase();
+        this.userDAO = new UserDAO(this.mySQLDatabase);
+        this.authDAO = new AuthDAO(this.mySQLDatabase);
+        this.gameDAO = new GameDAO(this.mySQLDatabase);
 
         // Register your endpoints and handle exceptions here.
         registerEndpoints();

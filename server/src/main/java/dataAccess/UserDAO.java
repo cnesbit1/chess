@@ -1,30 +1,31 @@
 package dataAccess;
 import database.MemoryDatabase;
+import database.MySQLDatabase;
 import model.AuthData;
 import model.UserData;
 
 import java.util.Map;
 
 public class UserDAO {
-    private MemoryDatabase memoryDatabase;
+    private database.MySQLDatabase mySQLDatabase;
 
-    public UserDAO(MemoryDatabase memoryDatabase) {
-        this.memoryDatabase = memoryDatabase;
+    public UserDAO(MySQLDatabase mySQLDatabase) {
+        this.mySQLDatabase = mySQLDatabase;
     }
 
     public void clear() {
-        memoryDatabase.clearUsers();
+        mySQLDatabase.clearUsers();
     }
 
     public UserData getUser(String username) throws DataAccessException {
-        return memoryDatabase.getUser(username);
+        return mySQLDatabase.getUser(username);
     }
     public void createUser(UserData user) throws DataAccessException {
-        memoryDatabase.createUser(user);
+        mySQLDatabase.createUser(user);
     }
 
     public Map<String, UserData>  getAllUsers() {
-        return memoryDatabase.getAllUsers();
+        return mySQLDatabase.getAllUsers();
     }
 
 }

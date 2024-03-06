@@ -4,6 +4,7 @@ import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import database.MemoryDatabase;
+import database.MySQLDatabase;
 import model.GameData;
 import model.UserData;
 import org.junit.Before;
@@ -24,10 +25,10 @@ public class ClearServiceTest {
 
     @Before
     public void setUp() {
-        MemoryDatabase memoryDatabase = new MemoryDatabase();
-        this.gameDAO = new GameDAO(memoryDatabase);
-        this.userDAO = new UserDAO(memoryDatabase);
-        this.authDAO = new AuthDAO(memoryDatabase);
+        MySQLDatabase mySQLDatabase = new MySQLDatabase();
+        this.gameDAO = new GameDAO(mySQLDatabase);
+        this.userDAO = new UserDAO(mySQLDatabase);
+        this.authDAO = new AuthDAO(mySQLDatabase);
         this.clearService = new ClearService(authDAO, userDAO, gameDAO);
     }
 
