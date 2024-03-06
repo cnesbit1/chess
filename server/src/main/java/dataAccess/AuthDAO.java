@@ -14,7 +14,7 @@ public class AuthDAO {
         this.memoryDatabase = memoryDatabase;
     }
 
-    public AuthData createAuth(String username) {
+    public AuthData createAuth(String username) throws DataAccessException {
         return memoryDatabase.createAuth(username);
     }
 

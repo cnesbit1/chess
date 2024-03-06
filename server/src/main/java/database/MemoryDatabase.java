@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 // Implementation for Memory Database
-public class MemoryDatabase {
+public class MemoryDatabase implements DataAccess {
     private Map<String, UserData> users;
     private Map<Integer, GameData> games;
     private Map<String, AuthData> auths;
@@ -46,8 +46,9 @@ public class MemoryDatabase {
     public GameData getGame(int gameID) {
         return games.get(gameID);
     }
+
     // Methods for auths
-    public AuthData createAuth(String username) {
+    public AuthData createAuth(String username) throws DataAccessException {
         // Generate a UUID for the authToken
         String authToken = UUID.randomUUID().toString();
         // Create an AuthData object
@@ -57,6 +58,11 @@ public class MemoryDatabase {
     }
     public AuthData getAuth(String authToken) {
         return auths.get(authToken);
+    }
+
+    public void deleteAuth(String authToken) throws NoAuthException {
+        if (auths.get(authToken) == null) { throw new NoAuthException(); }
+        auths.remove(authToken);
     }
     public boolean userExistsInGame(String username, int gameID, String clientColor) {
         GameData gameData = games.get(gameID);
@@ -85,10 +91,13 @@ public class MemoryDatabase {
         }
         games.put(gameID, newGameData);
     }
-    public void deleteAuth(String authToken) throws NoAuthException {
-        if (auths.get(authToken) == null) { throw new NoAuthException(); }
-        auths.remove(authToken);
+    @Override
+    public void clear() throws DataAccessException {
+        clearUsers();
+        clearAuths();
+        clearGames();
     }
+
     public void clearUsers() {
         users.clear();
     }

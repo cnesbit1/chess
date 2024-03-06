@@ -1,13 +1,14 @@
 package database;
 import dataAccess.DataAccessException;
+import exceptions.NoAuthException;
 import model.UserData;
 import model.GameData;
 import model.AuthData;
-import java.util.Map;
-import java.util.HashMap;
+
+import java.util.Collection;
 
 // Data Access Interface
-public interface Database {
+public interface DataAccess {
     void createUser(UserData userData) throws DataAccessException;
     UserData getUser(String username) throws DataAccessException;
     // Define other methods for CRUD operations
@@ -15,16 +16,20 @@ public interface Database {
     // Methods for games
     public void createGame(GameData game) throws DataAccessException;
 
+    public Collection<GameData> listGames();
+
     public GameData getGame(int gameID) throws DataAccessException;
 
+
     // Methods for auths
-    public void createAuth(AuthData auth) throws DataAccessException;
+    public AuthData createAuth(String username) throws DataAccessException;
 
     public AuthData getAuth(String authToken) throws DataAccessException;
 
-    public void deleteAuth(String authToken) throws DataAccessException;
+    public void deleteAuth(String authToken) throws DataAccessException, NoAuthException;
 
     // Method to clear the database
     public void clear() throws DataAccessException;
 }
+
 
