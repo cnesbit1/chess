@@ -10,6 +10,7 @@ import exceptions.NoUserException;
 import model.AuthData;
 import model.UserData;
 
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class UserService {
@@ -24,7 +25,7 @@ public class UserService {
         this.authAccess = authAccess;
     }
 
-    public AuthData register(String username, String password, String email) throws DataAccessException, UsernameTakenException {
+    public AuthData register(String username, String password, String email) throws DataAccessException, UsernameTakenException, SQLException {
         if (this.userAccess.getUser(username) == null) {
             UserData userData = new UserData(username, password, email);
             userAccess.createUser(userData);

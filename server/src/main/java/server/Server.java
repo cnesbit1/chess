@@ -32,7 +32,7 @@ public class Server {
 
     private database.MySQLDatabase mySQLDatabase;
 
-    public int run(int desiredPort) {
+    public int run(int desiredPort) throws DataAccessException {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");

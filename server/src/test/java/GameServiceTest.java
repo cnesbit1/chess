@@ -32,7 +32,7 @@ public class GameServiceTest {
     private UserDAO userDAO;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws DataAccessException {
         MySQLDatabase mySQLDatabase = new MySQLDatabase();
         this.gameDAO = new GameDAO(mySQLDatabase);
         this.authDAO = new AuthDAO(mySQLDatabase);

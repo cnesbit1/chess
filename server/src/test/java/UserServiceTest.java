@@ -19,7 +19,7 @@ public class UserServiceTest {
     private AuthDAO authDAO;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws DataAccessException {
         MySQLDatabase mySQLDatabase = new MySQLDatabase();
         this.userDAO = new UserDAO(mySQLDatabase);
         this.authDAO = new AuthDAO(mySQLDatabase);

@@ -13,6 +13,8 @@ import org.junit.Test;
 import exceptions.ResponseException;
 import service.ClearService;
 
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ClearServiceTest {
@@ -24,7 +26,7 @@ public class ClearServiceTest {
     private AuthDAO authDAO;
 
     @Before
-    public void setUp() {
+    public void setUp() throws DataAccessException {
         MySQLDatabase mySQLDatabase = new MySQLDatabase();
         this.gameDAO = new GameDAO(mySQLDatabase);
         this.userDAO = new UserDAO(mySQLDatabase);
@@ -32,7 +34,7 @@ public class ClearServiceTest {
         this.clearService = new ClearService(authDAO, userDAO, gameDAO);
     }
 
-    private void populateTestData() throws DataAccessException {
+    private void populateTestData() throws DataAccessException, SQLException {
         userDAO.createUser(new UserData("username1", "password1", "email@aol.com"));
         userDAO.createUser(new UserData("username2", "password2", "email2@aol.com"));
         userDAO.createUser(new UserData("username3", "password3", "email3@aol.com"));
