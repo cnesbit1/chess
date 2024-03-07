@@ -1,7 +1,6 @@
 package dataAccess;
 
-import database.MemoryDatabase;
-import database.MySQLDatabase;
+import dataAccess.database.MySQLDatabase;
 import model.GameData;
 
 import java.util.Collection;
@@ -22,23 +21,23 @@ public class GameDAO {
         return mySQLDatabase.getGame(gameID);
     }
 
-    public Collection<GameData> listGames() {
+    public Collection<GameData> listGames() throws DataAccessException {
         return mySQLDatabase.listGames();
     }
 
-    public void joinGame(String username, int gameID, String clientColor) {
+    public void joinGame(String username, int gameID, String clientColor) throws DataAccessException {
         mySQLDatabase.updateGame(username, gameID, clientColor);
     }
 
-    public boolean userExists(String username, int gameID, String clientColor) {
+    public boolean userExists(String username, int gameID, String clientColor) throws DataAccessException {
         return mySQLDatabase.userExistsInGame(username, gameID, clientColor);
     }
 
-    public void clear() {
+    public void clear() throws DataAccessException {
         mySQLDatabase.clearGames();
     }
 
-    public Map<Integer, GameData>  getAllGames() {
+    public Map<Integer, GameData>  getAllGames() throws DataAccessException {
         return mySQLDatabase.getAllGames();
     }
 }

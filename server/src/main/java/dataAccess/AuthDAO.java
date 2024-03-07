@@ -1,11 +1,9 @@
 package dataAccess;
 
-import database.MemoryDatabase;
-import database.MySQLDatabase;
+import dataAccess.database.MySQLDatabase;
 import exceptions.NoAuthException;
 import model.AuthData;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 public class AuthDAO {
@@ -17,22 +15,22 @@ public class AuthDAO {
     }
 
     public AuthData createAuth(String username) throws DataAccessException {
-        return MySQLDatabase.createAuth(username);
+        return this.mySQLDatabase.createAuth(username);
     }
 
-    public AuthData getAuth(String authToken) throws DataAccessException, SQLException {
-        return MySQLDatabase.getAuth(authToken);
+    public AuthData getAuth(String authToken) throws DataAccessException {
+        return this.mySQLDatabase.getAuth(authToken);
     }
 
-    public void deleteAuth(String authToken) throws NoAuthException, DataAccessException {
-        MySQLDatabase.deleteAuth(authToken);
+    public void deleteAuth(String authToken) throws DataAccessException, NoAuthException {
+        this.mySQLDatabase.deleteAuth(authToken);
     }
 
-    public void clear() {
-        MySQLDatabase.clearAuths();
+    public void clear() throws DataAccessException {
+        this.mySQLDatabase.clearAuths();
     }
 
-    public Map<String, AuthData> getAllAuths() {
-        return MySQLDatabase.getAllAuths();
+    public Map<String, AuthData> getAllAuths() throws DataAccessException {
+        return this.mySQLDatabase.getAllAuths();
     }
 }

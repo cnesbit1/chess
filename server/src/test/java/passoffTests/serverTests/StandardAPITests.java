@@ -1,6 +1,8 @@
 package passoffTests.serverTests;
 
 import chess.ChessGame;
+import dataAccess.DataAccessException;
+import exceptions.ResponseException;
 import org.junit.jupiter.api.*;
 import passoffTests.obfuscatedTestClasses.TestServerFacade;
 import passoffTests.testClasses.TestException;
@@ -8,6 +10,7 @@ import passoffTests.testClasses.TestModels;
 import server.Server;
 
 import java.net.HttpURLConnection;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,7 +41,7 @@ public class StandardAPITests {
 
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws SQLException, ResponseException, DataAccessException {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);

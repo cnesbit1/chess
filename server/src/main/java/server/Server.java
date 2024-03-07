@@ -1,13 +1,11 @@
 package server;
 
-import database.MemoryDatabase;
-
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import dataAccess.AuthDAO;
 
-import database.MySQLDatabase;
+import dataAccess.database.MySQLDatabase;
 import exceptions.NoAuthException;
 import exceptions.ResponseException;
 import handler.LogoutHandler;
@@ -24,22 +22,25 @@ import service.GameService;
 
 import spark.*;
 
-import java.sql.SQLException;
-
 public class Server {
 
     private UserDAO userDAO;
     private GameDAO gameDAO;
     private AuthDAO authDAO;
 
-    private database.MySQLDatabase mySQLDatabase;
+    private MySQLDatabase mySQLDatabase;
 
-    public int run(int desiredPort) throws DataAccessException, SQLException, ResponseException {
+    public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
-
-        this.mySQLDatabase = new MySQLDatabase();
+        try {
+            this.mySQLDatabase = new MySQLDatabase();
+        }
+        catch (DataAccessException e) {
+            stop();
+            return 0;
+        }
         this.userDAO = new UserDAO(this.mySQLDatabase);
         this.authDAO = new AuthDAO(this.mySQLDatabase);
         this.gameDAO = new GameDAO(this.mySQLDatabase);
@@ -67,7 +68,7 @@ public class Server {
         Spark.awaitStop();
     }
 
-    private Object clearApplication(Request req, Response res) throws ResponseException {
+    private Object clearApplication(Request req, Response res) throws ResponseException, DataAccessException {
         return ClearHandler.handle(req, res, new ClearService(this.authDAO, this.userDAO, this.gameDAO));
     }
 

@@ -1,4 +1,4 @@
-package database;
+package dataAccess.database;
 
 import chess.ChessGame;
 import dataAccess.DataAccessException;
@@ -25,6 +25,7 @@ public class MemoryDatabase implements DataAccess {
         auths = new HashMap<>();
     }
 
+    // Methods for users
     public void createUser(UserData userData) throws DataAccessException {
         // Implementation for creating user in memory
         users.put(userData.username(), userData);
@@ -34,6 +35,8 @@ public class MemoryDatabase implements DataAccess {
         // Implementation for getting user from memory
         return users.get(username);
     }
+
+    // Methods for games
 
     public void createGame(GameData gameData) {
         games.put(gameData.gameID(), gameData);
@@ -64,6 +67,8 @@ public class MemoryDatabase implements DataAccess {
         if (auths.get(authToken) == null) { throw new NoAuthException(); }
         auths.remove(authToken);
     }
+
+    // Additional helper and testing methods
     public boolean userExistsInGame(String username, int gameID, String clientColor) {
         GameData gameData = games.get(gameID);
         if (gameData == null) {
@@ -91,7 +96,21 @@ public class MemoryDatabase implements DataAccess {
         }
         games.put(gameID, newGameData);
     }
-    @Override
+
+    public Map<String, UserData> getAllUsers() {
+        return users;
+    }
+
+    public Map<Integer, GameData> getAllGames() {
+        return games;
+    }
+
+    public Map<String, AuthData> getAllAuths() {
+        return auths;
+    }
+
+
+    // Methods to clear database
     public void clear() throws DataAccessException {
         clearUsers();
         clearAuths();
@@ -108,15 +127,4 @@ public class MemoryDatabase implements DataAccess {
         auths.clear();
     }
 
-    public Map<String, UserData> getAllUsers() {
-        return users;
-    }
-
-    public Map<Integer, GameData> getAllGames() {
-        return games;
-    }
-
-    public Map<String, AuthData> getAllAuths() {
-        return auths;
-    }
 }

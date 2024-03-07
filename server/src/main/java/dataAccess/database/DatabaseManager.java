@@ -1,4 +1,4 @@
-package database;
+package dataAccess.database;
 
 import dataAccess.DataAccessException;
 

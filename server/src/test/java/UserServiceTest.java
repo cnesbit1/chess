@@ -1,8 +1,7 @@
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
-import database.MemoryDatabase;
-import database.MySQLDatabase;
+import dataAccess.database.MySQLDatabase;
 import exceptions.*;
 import model.AuthData;
 import org.junit.jupiter.api.AfterEach;
@@ -21,7 +20,7 @@ public class UserServiceTest {
     private AuthDAO authDAO;
 
     @BeforeEach
-    public void setUp() throws DataAccessException, SQLException, ResponseException {
+    public void setUp() throws DataAccessException {
         MySQLDatabase mySQLDatabase = new MySQLDatabase();
         this.userDAO = new UserDAO(mySQLDatabase);
         this.authDAO = new AuthDAO(mySQLDatabase);
@@ -29,7 +28,7 @@ public class UserServiceTest {
     }
 
     @AfterEach
-    public void cleanUp() {
+    public void cleanUp() throws DataAccessException {
         this.userDAO.clear();
         this.authDAO.clear();
     }

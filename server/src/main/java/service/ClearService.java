@@ -15,7 +15,7 @@ public class ClearService {
         this.userAccess = userAccess;
         this.gameAccess = gameAccess;
     }
-    public void clearApplication() throws ResponseException {
+    public void clearApplication() throws ResponseException, DataAccessException {
         this.authAccess.clear();
         this.userAccess.clear();
         this.gameAccess.clear();

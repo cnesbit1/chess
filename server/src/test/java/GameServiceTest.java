@@ -3,10 +3,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import chess.ChessGame;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
-import database.MemoryDatabase;
-import database.MySQLDatabase;
+import dataAccess.database.MySQLDatabase;
 import exceptions.*;
-import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +28,7 @@ public class GameServiceTest {
     private UserDAO userDAO;
 
     @BeforeEach
-    public void setUp() throws DataAccessException, SQLException, ResponseException {
+    public void setUp() throws DataAccessException {
         MySQLDatabase mySQLDatabase = new MySQLDatabase();
         this.gameDAO = new GameDAO(mySQLDatabase);
         this.authDAO = new AuthDAO(mySQLDatabase);
@@ -40,13 +38,13 @@ public class GameServiceTest {
     }
 
     @AfterEach
-    public void cleanUp() {
+    public void cleanUp() throws DataAccessException {
         this.gameDAO.clear();
         this.authDAO.clear();
     }
 
     @Test
-    public void testCreateGameSuccess() throws NoGameException, UsernameTakenException, DataAccessException, NoAuthException, SQLException {
+    public void testCreateGameSuccess() throws UsernameTakenException, DataAccessException, NoAuthException, SQLException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
@@ -60,7 +58,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testCreateGameNoAuth() throws UsernameTakenException, DataAccessException, NoAuthException, SQLException {
+    public void testCreateGameNoAuth() throws UsernameTakenException, DataAccessException, SQLException, NoAuthException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
@@ -95,7 +93,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testListGamesNoAuth() throws NoAuthException, UsernameTakenException, DataAccessException, SQLException {
+    public void testListGamesNoAuth() throws UsernameTakenException, DataAccessException, SQLException, NoAuthException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
@@ -129,7 +127,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testJoinGameNoAuth() throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException, UsernameTakenException, SQLException {
+    public void testJoinGameNoAuth() throws DataAccessException, UsernameTakenException, SQLException, NoAuthException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
@@ -144,7 +142,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testJoinGameNoGame() throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException, UsernameTakenException, SQLException {
+    public void testJoinGameNoGame() throws DataAccessException, UsernameTakenException, SQLException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
@@ -157,7 +155,7 @@ public class GameServiceTest {
     }
 
     @Test
-    public void testJoinGameBadTeamColor() throws NoGameException, NoAuthException, BadTeamColorException, DataAccessException, UsernameTakenException, SQLException {
+    public void testJoinGameBadTeamColor() throws DataAccessException, UsernameTakenException, SQLException {
         String username = "testUser";
         String password = "password123";
         String email = "test@example.com";
