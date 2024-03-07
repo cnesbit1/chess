@@ -8,10 +8,10 @@ import dataAccess.UserDAO;
 import dataAccess.database.MySQLDatabase;
 import model.GameData;
 import model.UserData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import exceptions.ResponseException;
+import org.junit.jupiter.api.BeforeEach;
 import service.ClearService;
 
 import java.sql.SQLException;
@@ -26,7 +26,7 @@ public class ClearServiceTest {
 
     private AuthDAO authDAO;
 
-    @Before
+    @BeforeEach
     public void setUp() throws DataAccessException, SQLException, ResponseException {
         MySQLDatabase mySQLDatabase = new MySQLDatabase();
         this.gameDAO = new GameDAO(mySQLDatabase);
