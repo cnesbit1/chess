@@ -1,4 +1,4 @@
-package dataAccess.database;
+package dataAccess;
 import dataAccess.DataAccessException;
 import exceptions.NoAuthException;
 import model.UserData;

@@ -5,7 +5,7 @@ import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import dataAccess.UserDAO;
-import dataAccess.database.MySQLDatabase;
+import dataAccess.MySQLDatabase;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.Test;

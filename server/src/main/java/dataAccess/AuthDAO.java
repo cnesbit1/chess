@@ -1,7 +1,5 @@
 package dataAccess;
 
-import dataAccess.database.DataAccess;
-import dataAccess.database.MySQLDatabase;
 import exceptions.NoAuthException;
 import model.AuthData;
 

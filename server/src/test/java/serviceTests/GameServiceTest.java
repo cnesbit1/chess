@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import chess.ChessGame;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
-import dataAccess.database.MySQLDatabase;
+import dataAccess.MySQLDatabase;
 import exceptions.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

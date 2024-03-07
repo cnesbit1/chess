@@ -5,7 +5,7 @@ import dataAccess.GameDAO;
 import dataAccess.UserDAO;
 import dataAccess.AuthDAO;
 
-import dataAccess.database.MySQLDatabase;
+import dataAccess.MySQLDatabase;
 import exceptions.NoAuthException;
 import exceptions.ResponseException;
 import handler.LogoutHandler;

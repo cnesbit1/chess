@@ -3,7 +3,7 @@ package serviceTests;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;
-import dataAccess.database.MySQLDatabase;
+import dataAccess.MySQLDatabase;
 import exceptions.*;
 import model.AuthData;
 import org.junit.jupiter.api.AfterEach;

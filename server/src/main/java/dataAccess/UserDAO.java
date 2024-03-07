@@ -1,7 +1,4 @@
 package dataAccess;
-import dataAccess.database.DataAccess;
-import dataAccess.database.DatabaseManager;
-import dataAccess.database.MySQLDatabase;
 import model.UserData;
 
 import java.util.Map;

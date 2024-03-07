@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
-import dataAccess.database.MySQLDatabase;
+import dataAccess.MySQLDatabase;
 import exceptions.NoAuthException;
 import model.AuthData;
 import org.junit.jupiter.api.AfterEach;

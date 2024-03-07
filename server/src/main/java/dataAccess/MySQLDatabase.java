@@ -1,8 +1,8 @@
-package dataAccess.database;
+package dataAccess;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
-import dataAccess.DataAccessException;
+
 import java.sql.*;
 
 import exceptions.NoAuthException;
