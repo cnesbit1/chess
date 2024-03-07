@@ -19,7 +19,7 @@ public class AuthDAO {
         return this.database.createAuth(username);
     }
 
-    public AuthData getAuth(String authToken) throws DataAccessException {
+    public AuthData getAuth(String authToken) throws DataAccessException, NoAuthException {
         return this.database.getAuth(authToken);
     }
 

@@ -1,3 +1,5 @@
+package serviceTests;
+
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
 import dataAccess.UserDAO;

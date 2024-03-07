@@ -1,3 +1,5 @@
+package serviceTests;
+
 import chess.ChessGame;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
@@ -49,7 +51,7 @@ public class ClearServiceTest {
         gameDAO.createGame(new GameData(128, "sixthWhiteName", "sixthBlackName", "game6", new ChessGame()));
 
         authDAO.createAuth("username1");
-        authDAO.createAuth("username1");
+        authDAO.createAuth("username2");
         authDAO.createAuth("username3");
         authDAO.createAuth("username4");
         authDAO.createAuth("username5");

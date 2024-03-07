@@ -25,7 +25,7 @@ public interface DataAccess {
     // Methods for auths
     AuthData createAuth(String username) throws DataAccessException;
 
-    AuthData getAuth(String authToken) throws DataAccessException;
+    AuthData getAuth(String authToken) throws DataAccessException, NoAuthException;
 
     void deleteAuth(String authToken) throws DataAccessException, NoAuthException;
 

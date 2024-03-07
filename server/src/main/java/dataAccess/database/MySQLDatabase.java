@@ -10,10 +10,7 @@ import model.AuthData;
 import model.GameData;
 import model.UserData;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 // Implementation for MySQL Database
 public class MySQLDatabase implements DataAccess {
@@ -67,7 +64,10 @@ public class MySQLDatabase implements DataAccess {
                 preparedStatement.setString(2, userData.password());
                 preparedStatement.setString(3, userData.email());
 
-                preparedStatement.executeUpdate();
+                int affectedRows = preparedStatement.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new DataAccessException("User creation failed: No rows affected");
+                }
             }
         }
         catch (SQLException e) {
@@ -176,7 +176,7 @@ public class MySQLDatabase implements DataAccess {
         }
     }
 
-    public AuthData getAuth(String authToken) throws DataAccessException {
+    public AuthData getAuth(String authToken) throws DataAccessException, NoAuthException {
         var statement = "SELECT authtoken, username FROM auth WHERE authtoken = ?";
         try (var connection = DatabaseManager.getConnection()) {
             try (var preparedStatement = connection.prepareStatement(statement)) {
@@ -185,12 +185,17 @@ public class MySQLDatabase implements DataAccess {
                     if (resultSet.next()) {
                         return new AuthData(resultSet.getString("authtoken"), resultSet.getString("username"));
                     }
+                    else {
+                        throw new NoAuthException();
+                    }
                 }
             }
         } catch (SQLException e) {
             throw new DataAccessException("Database Error");
         }
-        return null;
+        catch (NoAuthException e) {
+            throw new NoAuthException();
+        }
     }
 
         public void deleteAuth(String authToken) throws DataAccessException, NoAuthException {
@@ -231,14 +236,37 @@ public class MySQLDatabase implements DataAccess {
 
     public void updateGame(String username, int gameID, String clientColor) throws DataAccessException {
         String column;
+        String existingUsername;
+
+        // Determine the column to update based on the clientColor
         if ("white".equalsIgnoreCase(clientColor)) {
             column = "whiteusername";
         } else {
             column = "blackusername";
         }
-        var statement = String.format("UPDATE games SET %s = ? WHERE gameid = ?", column);
-        try (var connection = DatabaseManager.getConnection()) {
-            try (var preparedStatement = connection.prepareStatement(statement)) {
+
+        // Query to check the existing username in whiteusername column
+        String selectStatement = "SELECT whiteusername FROM games WHERE gameid = ?";
+
+        // Update statement
+        String updateStatement = String.format("UPDATE games SET %s = ? WHERE gameid = ?", column);
+
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (PreparedStatement selectPreparedStatement = connection.prepareStatement(selectStatement)) {
+                selectPreparedStatement.setInt(1, gameID);
+                ResultSet resultSet = selectPreparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    existingUsername = resultSet.getString("whiteusername");
+                    // Check if there's an existing username in whiteusername column
+                    if ("whiteusername".equals(column) && existingUsername != null) {
+                        // Do not perform update if there's an existing username
+                        return;
+                    }
+                }
+            }
+
+            // Proceed with the update
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateStatement)) {
                 preparedStatement.setString(1, username);
                 preparedStatement.setInt(2, gameID);
                 preparedStatement.executeUpdate();
