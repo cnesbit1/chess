@@ -7,7 +7,6 @@ import dataAccess.DataAccessException;
 import dataAccess.database.MySQLDatabase;
 import exceptions.NoAuthException;
 import model.AuthData;
-import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
