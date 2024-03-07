@@ -41,6 +41,7 @@ public class GameServiceTest {
     public void cleanUp() throws DataAccessException {
         this.gameDAO.clear();
         this.authDAO.clear();
+        this.userDAO.clear();
     }
 
     @Test
