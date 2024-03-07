@@ -1,5 +1,6 @@
 package dataAccess;
 
+import dataAccess.database.DataAccess;
 import dataAccess.database.MySQLDatabase;
 import model.GameData;
 
@@ -8,36 +9,36 @@ import java.util.Map;
 
 public class GameDAO {
 
-    private MySQLDatabase mySQLDatabase;
-    public GameDAO(MySQLDatabase mySQLDatabase) {
-        this.mySQLDatabase = mySQLDatabase;
+    private DataAccess database;
+    public GameDAO(DataAccess database) {
+        this.database = database;
     }
 
     public void createGame(GameData gameData) throws DataAccessException {
-        mySQLDatabase.createGame(gameData);
+        this.database.createGame(gameData);
     }
 
     public GameData getGame(int gameID) throws DataAccessException {
-        return mySQLDatabase.getGame(gameID);
+        return this.database.getGame(gameID);
     }
 
     public Collection<GameData> listGames() throws DataAccessException {
-        return mySQLDatabase.listGames();
+        return this.database.listGames();
     }
 
     public void joinGame(String username, int gameID, String clientColor) throws DataAccessException {
-        mySQLDatabase.updateGame(username, gameID, clientColor);
+        this.database.updateGame(username, gameID, clientColor);
     }
 
     public boolean userExists(String username, int gameID, String clientColor) throws DataAccessException {
-        return mySQLDatabase.userExistsInGame(username, gameID, clientColor);
+        return this.database.userExistsInGame(username, gameID, clientColor);
     }
 
     public void clear() throws DataAccessException {
-        mySQLDatabase.clearGames();
+        this.database.clearGames();
     }
 
     public Map<Integer, GameData>  getAllGames() throws DataAccessException {
-        return mySQLDatabase.getAllGames();
+        return this.database.getAllGames();
     }
 }

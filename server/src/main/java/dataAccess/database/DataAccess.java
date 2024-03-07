@@ -6,6 +6,7 @@ import model.GameData;
 import model.AuthData;
 
 import java.util.Collection;
+import java.util.Map;
 
 // Data Access Interface
 public interface DataAccess {
@@ -28,8 +29,25 @@ public interface DataAccess {
 
     void deleteAuth(String authToken) throws DataAccessException, NoAuthException;
 
+    // Helper methods for users, games, and auth
+    void updateGame(String username, int gameID, String clientColor) throws DataAccessException;
+
+    boolean userExistsInGame(String username, int gameID, String clientColor) throws DataAccessException;
+
+    Map<Integer, GameData> getAllGames() throws DataAccessException;
+
+    Map<String, UserData> getAllUsers() throws DataAccessException;
+
+    Map<String, AuthData> getAllAuths() throws DataAccessException;
+
     // Method to clear the database
     void clear() throws DataAccessException;
+
+    void clearGames() throws DataAccessException;
+
+    void clearUsers() throws DataAccessException;
+
+    void clearAuths() throws DataAccessException;
 }
 
 
