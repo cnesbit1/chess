@@ -358,7 +358,6 @@ public class MySQLDatabase implements DataAccess {
 
     private void clearTable(String table, int index) throws DataAccessException {
         var statement = String.format("DROP TABLE IF EXISTS %s",table);
-        System.out.println(createStatements[index]);
         try (var connection = DatabaseManager.getConnection()) {
             try (var preparedStatement = connection.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
