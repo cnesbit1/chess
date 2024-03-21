@@ -2,6 +2,7 @@ package ui;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -17,56 +18,31 @@ public class connectionHTTP {
         this.authToken = authToken;
     }
 
-    public String sendRegisterRequest(String username, String password, String email) throws IOException {
-        String endpoint = "/register";
-        String requestBody = "username=" + username + "&password=" + password + "&email=" + email;
-
-        HttpURLConnection connection = createConnection(endpoint, "POST", requestBody);
-        return handleResponse(connection);
-    }
-
-    private HttpURLConnection createConnection(String endpoint, String method, String requestBody) throws IOException {
-        URL url = new URL(baseURL + endpoint);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(method);
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+    public String sendPostRequest(String endpoint, String requestData) throws Exception {
+        String url = this.baseURL + endpoint;
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("POST");
         connection.setDoOutput(true);
+        connection.setRequestProperty("Content-Type", "application/json");
 
-        if (authToken != null) {
-            connection.setRequestProperty("Authorization", authToken);
-        }
-
-        if (requestBody != null) {
-            sendRequestBody(connection, requestBody);
-        }
-
-        return connection;
-    }
-
-    private void sendRequestBody(HttpURLConnection connection, String requestBody) throws IOException {
+        // Send request data
         OutputStream outputStream = connection.getOutputStream();
-        outputStream.write(requestBody.getBytes());
+        outputStream.write(requestData.getBytes());
         outputStream.flush();
-        outputStream.close();
-    }
 
-    private String handleResponse(HttpURLConnection connection) throws IOException {
+        // Read response
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            return readResponse(connection);
+            InputStream inputStream = connection.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            return response.toString();
         } else {
-            throw new IOException("Registration failed with status code: " + responseCode);
+            throw new Exception("Registration failed. Response code: " + responseCode);
         }
-    }
-
-    private String readResponse(HttpURLConnection connection) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        StringBuilder response = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            response.append(line);
-        }
-        reader.close();
-        return response.toString();
     }
 }

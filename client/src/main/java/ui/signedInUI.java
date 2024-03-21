@@ -23,8 +23,8 @@ public class signedInUI extends abstractREPL {
             this.description = description;
         }
     }
-    public signedInUI(switchUILoop programLoop) {
-        super(programLoop);
+    public signedInUI(switchUILoop programLoop, serverFacade serverWrapper) {
+        super(programLoop, serverWrapper);
     }
 
     @Override

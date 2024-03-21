@@ -1,4 +1,6 @@
 package ui;
+import model.UserData;
+
 import java.lang.Exception;
 public class signedOutUI extends abstractREPL {
 
@@ -16,8 +18,8 @@ public class signedOutUI extends abstractREPL {
         }
     }
 
-    public signedOutUI(switchUILoop programLoop) {
-        super(programLoop);
+    public signedOutUI(switchUILoop programLoop, serverFacade serverWrapper) {
+        super(programLoop, serverWrapper);
     }
 
     @Override
@@ -31,6 +33,8 @@ public class signedOutUI extends abstractREPL {
                 String password = scanner.nextLine();
                 System.out.println("Input Email:");
                 String email = scanner.nextLine();
+                UserData userData = new UserData(username, password, email);
+                serverWrapper.register(username, password, email);
                 System.out.println();
             }
             else if (choice == 2) {

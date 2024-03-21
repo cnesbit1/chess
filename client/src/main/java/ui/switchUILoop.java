@@ -20,9 +20,10 @@ public class switchUILoop {
 
     public switchUILoop() {
         currentState = states.SIGNEDOUT;
-        loggedInUI = new signedInUI(this);
-        loggedOutUI = new signedOutUI(this);
-        gameplayUI = new inGameUI(this);
+        serverFacade serverWrapper = new serverFacade(52169, new connectionHTTP(null, "localhost", 52169));
+        loggedInUI = new signedInUI(this, serverWrapper);
+        loggedOutUI = new signedOutUI(this, serverWrapper);
+        gameplayUI = new inGameUI(this, serverWrapper);
     }
 
     public void run() {

@@ -3,6 +3,7 @@ import ui.switchUILoop;
 
 public class Main {
     public static void main(String[] args) {
+
         switchUILoop programLoop = new switchUILoop();
         programLoop.run();
 //        var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);

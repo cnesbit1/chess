@@ -3,8 +3,8 @@ package ui;
 import java.util.Objects;
 
 public class inGameUI extends abstractREPL {
-    public inGameUI(switchUILoop programLoop) {
-        super(programLoop);
+    public inGameUI(switchUILoop programLoop, serverFacade serverWrapper) {
+        super(programLoop, serverWrapper);
     }
 
     @Override

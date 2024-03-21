@@ -10,10 +10,13 @@ public abstract class abstractREPL {
 
     public switchUILoop programLoop;
 
+    public serverFacade serverWrapper;
+
     public boolean switchUI = false;
 
-    public abstractREPL(switchUILoop programLoop) {
+    public abstractREPL(switchUILoop programLoop,serverFacade serverWrapper) {
         this.programLoop = programLoop;
+        this.serverWrapper = serverWrapper;
     }
 
     public void run() {
