@@ -2,22 +2,18 @@ package ui;
 
 import model.GameData;
 import responses.ListGames;
-
 import java.util.Collection;
 import java.util.Objects;
 
 public class signedInUI extends abstractREPL {
-
     private enum optionsUI {
         LISTGAMES(1, "list games"),
         CREATEGAME(2, "create game"),
         JOINGAME(3, "join game"),
         OBSERVEGAME(4, "observe game"),
         LOGOUT(5, "log out");
-
         private final int number;
         private final String description;
-
         optionsUI(int number, String description) {
             this.number = number;
             this.description = description;

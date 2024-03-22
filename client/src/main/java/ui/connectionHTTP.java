@@ -11,16 +11,13 @@ import java.net.URL;
 public class connectionHTTP {
     public String baseURL;
     public String authToken;
-
     public connectionHTTP(String authToken, String host, int port) {
         this.baseURL = String.format("http://%s:%s", host, port);;
         this.authToken = authToken;
     }
-
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
-
     public String sendPostRequest(String endpoint, String requestData, String authToken) throws Exception {
         String url = this.baseURL + endpoint;
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -43,7 +40,6 @@ public class connectionHTTP {
             throw new Exception(String.format("Registration failed. Response code: %s", responseCode));
         }
     }
-
     public String sendGetRequest(String endpoint, String authToken) throws Exception {
         String url = this.baseURL + endpoint;
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -60,11 +56,11 @@ public class connectionHTTP {
             throw new Exception(String.format("GET request failed. Response code: %s", responseCode));
         }
     }
-
     public String sendDeleteRequest(String endpoint, String authToken) throws Exception {
         String url = this.baseURL + endpoint;
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod("DELETE");
+
         if (authToken != null) {
             connection.setRequestProperty("Authorization", authToken);
         }
@@ -77,7 +73,6 @@ public class connectionHTTP {
             throw new Exception(String.format("Logout failed. Response code: %s", responseCode));
         }
     }
-
     private String getString(HttpURLConnection connection) throws IOException {
         InputStream inputStream = connection.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -88,7 +83,6 @@ public class connectionHTTP {
         }
         return response.toString();
     }
-
     public void sendPutRequest(String endpoint, String requestData, String authToken) throws Exception {
         String url = this.baseURL + endpoint;
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
@@ -105,9 +99,7 @@ public class connectionHTTP {
         outputStream.flush();
 
         int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-        } else {
-            throw new Exception(String.format("PUT request failed. Response code: %s", responseCode));
-        }
+        if (responseCode == HttpURLConnection.HTTP_OK) {}
+        else { throw new Exception(String.format("PUT request failed. Response code: %s", responseCode)); }
     }
 }
