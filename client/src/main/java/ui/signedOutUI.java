@@ -1,6 +1,5 @@
 package ui;
 import model.AuthData;
-import model.UserData;
 
 import java.lang.Exception;
 public class signedOutUI extends abstractREPL {
@@ -55,9 +54,7 @@ public class signedOutUI extends abstractREPL {
                 programLoop.switchToSignedIn();
                 changeUI();
             }
-            else {
-                throw new Exception();
-            }
+            else { throw new Exception(); }
         }
         catch (Exception e) {
             System.out.println("That wasn't a valid choice, try again.");
