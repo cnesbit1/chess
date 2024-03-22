@@ -9,5 +9,6 @@ public class Main {
         System.out.println("Started HTTP server on port: " + port);
         switchUILoop programLoop = new switchUILoop(port);
         programLoop.run();
+        // End of Program
     }
 }

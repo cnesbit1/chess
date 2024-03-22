@@ -50,10 +50,6 @@ public class signedOutUI extends abstractREPL {
                 programLoop.switchToSignedIn();
                 this.changeUI();
             }
-            else if (choice == 3) {
-                programLoop.switchToSignedIn();
-                changeUI();
-            }
             else { throw new Exception(); }
         }
         catch (Exception e) {

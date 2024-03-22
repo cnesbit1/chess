@@ -33,21 +33,21 @@ public class inGameUI extends abstractREPL {
     public void showUIPrompt() {
         System.out.println("Give an input of 'help' for more possible instructions.");
         System.out.println("Black's Perspective:");
-        drawChessboardOrientation(false);
+        displayChessboard(false);
 
         System.out.println();
 
         System.out.println("White's Perspective:");
-        drawChessboardOrientation(true);
+        displayChessboard(true);
     }
-    private void drawChessboardOrientation(boolean whiteAtBottom) {
-        String[][] board = getInitialChessboard();
-        String columns = generateColumnLabels(whiteAtBottom);
+    private void displayChessboard(boolean whiteAtBottom) {
+        String[][] board = populateStartingChessboard();
+        String columns = displayColHeaders(whiteAtBottom);
         System.out.println(columns);
-        drawChessboardRows(board, whiteAtBottom);
+        displayRows(board, whiteAtBottom);
         System.out.println(columns);
     }
-    private String generateColumnLabels(boolean whiteAtBottom) {
+    private String displayColHeaders(boolean whiteAtBottom) {
         StringBuilder columnsBuilder = new StringBuilder("    ");
 
         char colStartLabel = whiteAtBottom ? 'a' : 'h';
@@ -60,7 +60,7 @@ public class inGameUI extends abstractREPL {
 
         return columnsBuilder.toString();
     }
-    private void drawChessboardRows(String[][] board, boolean whiteAtBottom) {
+    private void displayRows(String[][] board, boolean whiteAtBottom) {
         int rowStart = whiteAtBottom ? 7 : 0;
         int rowEnd = whiteAtBottom ? -1 : 8;
         int rowStep = whiteAtBottom ? -1 : 1;
@@ -68,11 +68,11 @@ public class inGameUI extends abstractREPL {
         for (int row = rowStart; row != rowEnd; row += rowStep) {
             String displayRow = "  " + (row + 1) + " ";
             System.out.print(displayRow);
-            drawChessboardRow(board, row, whiteAtBottom);
+            displayRow(board, row, whiteAtBottom);
             System.out.println(displayRow);
         }
     }
-    private void drawChessboardRow(String[][] board, int row, boolean whiteAtBottom) {
+    private void displayRow(String[][] board, int row, boolean whiteAtBottom) {
         int colStart = whiteAtBottom ? 0 : 7;
         int colEnd = whiteAtBottom ? 8 : -1;
         int colStep = whiteAtBottom ? 1 : -1;
@@ -81,10 +81,9 @@ public class inGameUI extends abstractREPL {
             String piece = board[row][col];
             String textColor;
             if (Character.isUpperCase(piece.charAt(0))) {
-                // White pieces
                 textColor = "\u001B[34m";
-            } else {
-                // Black pieces
+            }
+            else {
                 textColor = "\u001B[31m";
             }
             String backgroundColor = (row + col) % 2 == 0 ? "\u001B[40m" : "\u001B[47m";
@@ -92,7 +91,7 @@ public class inGameUI extends abstractREPL {
             System.out.print(backgroundColor + textColor + " " + piece + " \u001B[0m");
         }
     }
-    private String[][] getInitialChessboard() {
+    private String[][] populateStartingChessboard() {
         String[][] board = new String[8][8];
 
         for (int row = 0; row < 8; row++) {
