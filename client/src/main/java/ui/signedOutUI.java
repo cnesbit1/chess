@@ -1,4 +1,5 @@
 package ui;
+import model.AuthData;
 import model.UserData;
 
 import java.lang.Exception;
@@ -33,16 +34,22 @@ public class signedOutUI extends abstractREPL {
                 String password = scanner.nextLine();
                 System.out.println("Input Email:");
                 String email = scanner.nextLine();
-                UserData userData = new UserData(username, password, email);
-                serverWrapper.register(username, password, email);
+                AuthData authData = serverWrapper.register(username, password, email);
+                serverWrapper.conn.setAuthToken(authData.authToken());
                 System.out.println();
+                System.out.println("Successful Registration!");
             }
             else if (choice == 2) {
                 System.out.println("Input Username:");
                 String username = scanner.nextLine();
                 System.out.println("Input Password:");
                 String password = scanner.nextLine();
+                AuthData authData = serverWrapper.login(username, password);
+                serverWrapper.conn.setAuthToken(authData.authToken());
                 System.out.println();
+                System.out.println("Successful Log in!");
+                programLoop.switchToSignedIn();
+                this.changeUI();
             }
             else if (choice == 3) {
                 programLoop.switchToSignedIn();

@@ -96,7 +96,7 @@ public class inGameUI extends abstractREPL {
                 // Black pieces
                 textColor = "\u001B[31m"; // Black color
             }
-            String backgroundColor = (row + col) % 2 == 0 ? "\u001B[47m" : "\u001B[40m"; // White or black squares
+            String backgroundColor = (row + col) % 2 == 0 ? "\u001B[40m" : "\u001B[47m"; // White or black squares
 
             System.out.print(backgroundColor + textColor + " " + piece + " \u001B[0m"); // Reset colors after each piece
         }

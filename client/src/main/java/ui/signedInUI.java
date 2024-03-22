@@ -1,5 +1,9 @@
 package ui;
 
+import model.GameData;
+import responses.ListGames;
+
+import java.util.Collection;
 import java.util.Objects;
 
 public class signedInUI extends abstractREPL {
@@ -33,17 +37,45 @@ public class signedInUI extends abstractREPL {
             if (Objects.equals(input, "quit")) { throw new Exception(); }
             int choice = Integer.parseInt(input);
             if (choice == 1) {
-                System.out.println("This isn't implemented yet.");
+                System.out.println("List Games:");
+                ListGames games = serverWrapper.listGames(serverWrapper.conn.authToken);
+                Collection<GameData> listGames = games.getGamesList();
+                int index = 1;
+                for (GameData game : listGames) {
+                    System.out.println("Game Number: " + index);
+                    index = index + 1;
+                    System.out.println("Game ID: " + game.gameID() + " - White Username: " + game.whiteUsername() + " - Black Username: " + game.blackUsername() + " - Game Name: " + game.gameName());
+                }
+                System.out.println();
             } else if (choice == 2) {
-                System.out.println("This isn't implemented yet.");
+                System.out.println("Input Game Name:");
+                String gamename = scanner.nextLine();
+                serverWrapper.createGame(serverWrapper.conn.authToken, gamename);
+                System.out.println();
+                System.out.println("Successful Game Created");
             } else if (choice == 3) {
-                System.out.println("This isn't implemented yet.");
-            } else if (choice == 4) {
-                System.out.println("This isn't implemented yet.");
-            } else if (choice == 5) {
-                System.out.println("This isn't implemented yet.");
-            } else if (choice == 6) {
+                System.out.println("Input GameID:");
+                String gameID = scanner.nextLine();
+                System.out.println("Input White or Black:");
+                String playerColor = scanner.nextLine();
+                serverWrapper.joinGame(serverWrapper.conn.authToken, Integer.parseInt(gameID), playerColor);
+                System.out.println();
+                System.out.println("Successful Game Joined");
                 programLoop.switchToInGame();
+                changeUI();
+            } else if (choice == 4) {
+                System.out.println("Input GameID:");
+                String gameID = scanner.nextLine();
+                serverWrapper.joinGame(serverWrapper.conn.authToken, Integer.parseInt(gameID), null);
+                System.out.println();
+                System.out.println("Successful Game Joined");
+                programLoop.switchToInGame();
+                changeUI();
+            } else if (choice == 5) {
+                serverWrapper.logout(serverWrapper.conn.authToken);
+                System.out.println();
+                System.out.println("Successful Logout");
+                programLoop.switchToSignedOut();
                 changeUI();
             } else {
                 throw new Exception();
