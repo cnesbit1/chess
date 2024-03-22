@@ -91,14 +91,14 @@ public class inGameUI extends abstractREPL {
             String textColor;
             if (Character.isUpperCase(piece.charAt(0))) {
                 // White pieces
-                textColor = "\u001B[34m"; // Blue color
+                textColor = "\u001B[34m";
             } else {
                 // Black pieces
-                textColor = "\u001B[31m"; // Black color
+                textColor = "\u001B[31m";
             }
-            String backgroundColor = (row + col) % 2 == 0 ? "\u001B[40m" : "\u001B[47m"; // White or black squares
+            String backgroundColor = (row + col) % 2 == 0 ? "\u001B[40m" : "\u001B[47m";
 
-            System.out.print(backgroundColor + textColor + " " + piece + " \u001B[0m"); // Reset colors after each piece
+            System.out.print(backgroundColor + textColor + " " + piece + " \u001B[0m");
         }
     }
 
