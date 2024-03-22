@@ -37,7 +37,8 @@ public class signedInUI extends abstractREPL {
                 for (GameData game : listGames) {
                     System.out.println("Game Number: " + index);
                     index = index + 1;
-                    System.out.println("Game ID: " + game.gameID() + " - White Username: " + game.whiteUsername() + " - Black Username: " + game.blackUsername() + " - Game Name: " + game.gameName());
+                    System.out.printf("Game ID: %s - White Username: %s - Black Username: %s - Game Name: %s%n",
+                            game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName());
                 }
                 System.out.println();
             }
