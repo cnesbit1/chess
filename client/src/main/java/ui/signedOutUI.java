@@ -37,6 +37,8 @@ public class signedOutUI extends abstractREPL {
                 serverWrapper.conn.setAuthToken(authData.authToken());
                 System.out.println();
                 System.out.println("Successful Registration!");
+                programLoop.switchToSignedIn();
+                this.changeUI();
             }
             else if (choice == 2) {
                 System.out.println("Input Username:");
