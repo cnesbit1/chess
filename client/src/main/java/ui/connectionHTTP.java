@@ -1,7 +1,5 @@
 package ui;
 
-import model.AuthData;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,22 +33,13 @@ public class connectionHTTP {
             connection.setRequestProperty("Authorization", authToken);
         }
 
-        // Send request data
         OutputStream outputStream = connection.getOutputStream();
         outputStream.write(requestData.getBytes());
         outputStream.flush();
 
-        // Read response
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            InputStream inputStream = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            return response.toString();
+            return getString(connection);
         } else {
             throw new Exception("Registration failed. Response code: " + responseCode);
         }
@@ -65,17 +54,9 @@ public class connectionHTTP {
             connection.setRequestProperty("Authorization", authToken);
         }
 
-        // Read response
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            InputStream inputStream = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            return response.toString();
+            return getString(connection);
         } else {
             throw new Exception("GET request failed. Response code: " + responseCode);
         }
@@ -86,24 +67,27 @@ public class connectionHTTP {
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod("DELETE");
         if (authToken != null) {
-            connection.setRequestProperty("Authorization", authToken); // Include authentication token in the header
+            connection.setRequestProperty("Authorization", authToken);
         }
-        connection.setDoOutput(false); // No request body for DELETE requests
+        connection.setDoOutput(false);
 
-        // Read response
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            InputStream inputStream = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            return response.toString();
+            return getString(connection);
         } else {
             throw new Exception("Logout failed. Response code: " + responseCode);
         }
+    }
+
+    private String getString(HttpURLConnection connection) throws IOException {
+        InputStream inputStream = connection.getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder response = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            response.append(line);
+        }
+        return response.toString();
     }
 
     public void sendPutRequest(String endpoint, String requestData, String authToken) throws Exception {
@@ -113,22 +97,17 @@ public class connectionHTTP {
         connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type", "application/json");
 
-        // Set authentication token in the request header if provided
         if (authToken != null && !authToken.isEmpty()) {
             connection.setRequestProperty("Authorization", authToken);
         }
 
-        // Send request data
         OutputStream outputStream = connection.getOutputStream();
         outputStream.write(requestData.getBytes());
         outputStream.flush();
 
-        // Read response
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            // Process successful response if needed
         } else {
-            // Handle error response
             throw new Exception("PUT request failed. Response code: " + responseCode);
         }
     }

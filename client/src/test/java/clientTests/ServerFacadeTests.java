@@ -29,12 +29,12 @@ class ServerFacadeTest {
         System.out.println("Started test HTTP server on " + port);
 
         conn = new connectionHTTP(null, "localhost", port);
-        this.serverWrapper = new serverFacade(port, conn);
+        this.serverWrapper = new serverFacade(conn);
         this.serverWrapper.conn.sendDeleteRequest("/db", null);
     }
 
     @AfterEach
-    public void stopServer() throws Exception {
+    public void stopServer() {
         this.server.stop();
     }
 
@@ -46,30 +46,30 @@ class ServerFacadeTest {
 
     @Test
     public void testRegisterNegative() throws Exception {
-        AuthData authData = serverWrapper.register("testuser", "testpassword", "test@example.com");
+        serverWrapper.register("testuser", "testpassword", "test@example.com");
         assertThrows(Exception.class, () -> serverWrapper.register("testuser", "testpassword", "test@example.com"));
     }
 
     @Test
     public void testLoginPositive() throws Exception {
-        AuthData authData = serverWrapper.register("testuser", "testpassword", "test@example.com");
-        AuthData authData2 = serverWrapper.login(authData.username(), "testpassword");
-        assertNotNull(authData2);
+        serverWrapper.register("testuser", "testpassword", "test@example.com");
+        AuthData authData = serverWrapper.login("testuser", "testpassword");
+        assertNotNull(authData);
     }
 
     @Test
-    public void testLoginPositive2() throws Exception {
+    public void testLoginNegative()  {
         assertThrows(Exception.class, () -> serverWrapper.login("testuser", "testpassword"));
     }
 
     @Test
     public void testLogoutPositive() throws Exception {
-        AuthData authData = serverWrapper.register("testuser", "testpassword", "test@example.com");
-        AuthData authData2 = serverWrapper.login("testuser", "testpassword");
-        assertDoesNotThrow(() -> serverWrapper.logout(authData2.authToken()));
+        serverWrapper.register("testuser", "testpassword", "test@example.com");
+        AuthData authData = serverWrapper.login("testuser", "testpassword");
+        assertDoesNotThrow(() -> serverWrapper.logout(authData.authToken()));
     }
     @Test
-    public void testLogoutFailure() throws Exception {
+    public void testLogoutFailure() {
         assertThrows(Exception.class, () -> serverWrapper.logout(" "));
     }
 
@@ -77,14 +77,13 @@ class ServerFacadeTest {
     public void testCreateGamePositive() throws Exception {
         AuthData authData = serverWrapper.register("testuser", "testpassword", "test@example.com");
         AuthData authData2 = serverWrapper.login(authData.username(), "testpassword");
-        int gameID = serverWrapper.createGame(authData2.authToken(), "testgamename");
-        assertNotNull(gameID);
+        assertDoesNotThrow(() -> serverWrapper.createGame(authData2.authToken(), "testgamename"));
     }
 
     @Test
     public void testCreateGameFailure() throws Exception {
-        AuthData authData = serverWrapper.register("testuser", "testpassword", "test@example.com");
-        AuthData authData2 = serverWrapper.login(authData.username(), "testpassword");
+        serverWrapper.register("testuser", "testpassword", "test@example.com");
+        serverWrapper.login("testuser", "testpassword");
         assertThrows(Exception.class, () -> serverWrapper.createGame(null, "testgamename"));
     }
 
@@ -95,8 +94,7 @@ class ServerFacadeTest {
         serverWrapper.createGame(authData2.authToken(), "testgamename");
         serverWrapper.createGame(authData2.authToken(), "testgamename2");
         serverWrapper.createGame(authData2.authToken(), "testgamename3");
-        var games = serverWrapper.listGames(authData2.authToken());
-        assertNotNull(games);
+        assertNotNull(serverWrapper.listGames(authData2.authToken()));
     }
     @Test
     public void testListGamesFailure() throws Exception {

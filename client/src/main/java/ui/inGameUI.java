@@ -105,14 +105,12 @@ public class inGameUI extends abstractREPL {
     private String[][] getInitialChessboard() {
         String[][] board = new String[8][8];
 
-        // Initialize the chessboard with empty squares
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 board[row][col] = " ";
             }
         }
 
-        // Place the white pieces
         board[7][0] = "R";
         board[7][1] = "N";
         board[7][2] = "B";
@@ -125,7 +123,6 @@ public class inGameUI extends abstractREPL {
             board[6][col] = "P";
         }
 
-        // Place the black pieces
         board[0][0] = "r";
         board[0][1] = "n";
         board[0][2] = "b";

@@ -9,7 +9,5 @@ public class Main {
         System.out.println("Started HTTP server on port: " + port);
         switchUILoop programLoop = new switchUILoop(port);
         programLoop.run();
-//        var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-//        System.out.println("♕ 240 Chess Client: " + piece);
     }
 }
