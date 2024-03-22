@@ -10,11 +10,10 @@ import java.net.URL;
 
 public class connectionHTTP {
     public String baseURL;
-
     public String authToken;
 
     public connectionHTTP(String authToken, String host, int port) {
-        this.baseURL = "http://" + host + ":" + port;;
+        this.baseURL = String.format("http://%s:%s", host, port);;
         this.authToken = authToken;
     }
 
@@ -41,7 +40,7 @@ public class connectionHTTP {
         if (responseCode == HttpURLConnection.HTTP_OK) {
             return getString(connection);
         } else {
-            throw new Exception("Registration failed. Response code: " + responseCode);
+            throw new Exception(String.format("Registration failed. Response code: %s", responseCode));
         }
     }
 
@@ -58,7 +57,7 @@ public class connectionHTTP {
         if (responseCode == HttpURLConnection.HTTP_OK) {
             return getString(connection);
         } else {
-            throw new Exception("GET request failed. Response code: " + responseCode);
+            throw new Exception(String.format("GET request failed. Response code: %s", responseCode));
         }
     }
 
@@ -75,7 +74,7 @@ public class connectionHTTP {
         if (responseCode == HttpURLConnection.HTTP_OK) {
             return getString(connection);
         } else {
-            throw new Exception("Logout failed. Response code: " + responseCode);
+            throw new Exception(String.format("Logout failed. Response code: %s", responseCode));
         }
     }
 
@@ -108,7 +107,7 @@ public class connectionHTTP {
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
         } else {
-            throw new Exception("PUT request failed. Response code: " + responseCode);
+            throw new Exception(String.format("PUT request failed. Response code: %s", responseCode));
         }
     }
 }
