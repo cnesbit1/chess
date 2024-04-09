@@ -10,6 +10,7 @@ import responses.ListGames;
 
 public class serverFacade {
     public connectionHTTP conn;
+    public connectionWebSocket webConn;
     public serverFacade(connectionHTTP conn) {
         this.conn = conn;
     }

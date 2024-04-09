@@ -69,7 +69,7 @@ public class Server {
 
     private void registerEndpoints() {
         // Define your endpoints here
-        Spark.webSocket("/connect", Server.class);
+        Spark.webSocket("/connect", webSocketHandler.class);
         Spark.delete("/db", this::clearApplication);
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::login);
