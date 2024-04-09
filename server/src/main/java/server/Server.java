@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.Gson;
 import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
 import dataAccess.UserDAO;
@@ -16,12 +17,20 @@ import handler.JoinGameHandler;
 import handler.RegisterHandler;
 import handler.ClearHandler;
 
+import model.UserData;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+
 import service.ClearService;
 import service.UserService;
 import service.GameService;
 
 import spark.*;
+import webSocketMessages.userCommands.UserGameCommand;
 
+import static webSocketMessages.userCommands.UserGameCommand.CommandType.*;
+
+@WebSocket
 public class Server {
 
     private UserDAO userDAO;
@@ -60,6 +69,7 @@ public class Server {
 
     private void registerEndpoints() {
         // Define your endpoints here
+        Spark.webSocket("/connect", Server.class);
         Spark.delete("/db", this::clearApplication);
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::login);
@@ -72,6 +82,10 @@ public class Server {
     public void stop() {
         Spark.stop();
         Spark.awaitStop();
+    }
+
+    private Object webSocketHandler(Request req, Response res) throws ResponseException, DataAccessException {
+        return RegisterHandler.handle(req, res, new UserService(this.userDAO, this.authDAO));
     }
 
     private Object clearApplication(Request req, Response res) throws ResponseException, DataAccessException {
