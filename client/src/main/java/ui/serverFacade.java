@@ -11,8 +11,9 @@ import responses.ListGames;
 public class serverFacade {
     public connectionHTTP conn;
     public connectionWebSocket webConn;
-    public serverFacade(connectionHTTP conn) {
+    public serverFacade(connectionHTTP conn, connectionWebSocket webConn) {
         this.conn = conn;
+        this.webConn = webConn;
     }
     public AuthData register(String username, String password, String email) throws Exception {
         String requestData = "{ \"username\": \"" + username + "\", \"password\": \"" + password + "\", \"email\": \"" + email + "\" }";
@@ -46,5 +47,6 @@ public class serverFacade {
         JoinRequestData requestData = new JoinRequestData(playerColor, gameID);
         String data = new Gson().toJson(requestData);
         conn.sendPutRequest("/game", data, authToken);
+//        webConn.
     }
 }

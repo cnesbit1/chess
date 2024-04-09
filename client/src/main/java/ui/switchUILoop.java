@@ -20,7 +20,9 @@ public class switchUILoop {
 
     public switchUILoop(int port) {
         currentState = states.SIGNEDOUT;
-        serverFacade serverWrapper = new serverFacade(new connectionHTTP(null, "localhost", port));
+        connectionHTTP conn = new connectionHTTP(null, "localhost", port);
+        connectionWebSocket webConn = new connectionWebSocket(null, "localhost", port);
+        serverFacade serverWrapper = new serverFacade(conn, webConn);
         loggedInUI = new signedInUI(this, serverWrapper);
         loggedOutUI = new signedOutUI(this, serverWrapper);
         gameplayUI = new inGameUI(this, serverWrapper);

@@ -15,12 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import model.AuthData;
 import responses.ListGames;
 import ui.connectionHTTP;
+import ui.connectionWebSocket;
 import ui.serverFacade;
 
 class ServerFacadeTest {
     private Server server;
     private serverFacade serverWrapper;
     private connectionHTTP conn;
+    private connectionWebSocket webConn;
 
     @BeforeEach
     public void init() throws Exception {
@@ -29,7 +31,8 @@ class ServerFacadeTest {
         System.out.println("Started test HTTP server on " + port);
 
         conn = new connectionHTTP(null, "localhost", port);
-        this.serverWrapper = new serverFacade(conn);
+        webConn = new connectionWebSocket(null, "localhost", port);
+        this.serverWrapper = new serverFacade(conn, webConn);
         this.serverWrapper.conn.sendDeleteRequest("/db", null);
     }
 

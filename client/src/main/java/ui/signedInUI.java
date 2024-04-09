@@ -26,8 +26,6 @@ public class signedInUI extends abstractREPL {
     @Override
     public void processInput(String input) {
         try {
-//            if (Objects.equals(input, "quit")) { throw new Exception(); }
-
             int choice = Integer.parseInt(input);
             if (choice == 1) {
                 System.out.println("List Games:");

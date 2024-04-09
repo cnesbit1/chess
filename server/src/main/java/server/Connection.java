@@ -1,15 +1,14 @@
 package server;
-import chess.ChessGame;
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
-import service.GameService;
-import service.UserService;
-import webSocketMessages.userCommands.JoinPlayer;
+import webSocketMessages.severMessages.Error;
+import java.io.IOException;
 
 public class Connection {
     private Session session;
+
     private String authToken;
 
-    private GameService gameService;
 
     public Connection(Session session, String authToken) {
         this.session = session;
@@ -18,31 +17,26 @@ public class Connection {
 
     public static void sendError(Session session, String errorMessage) {
         try {
-            session.getRemote().sendString("Error: " + errorMessage);
+            String totalErrorMessage = "Error: " + errorMessage;
+            Error error = new Error(totalErrorMessage);
+            Gson gson = new Gson();
+            String errorJSON = gson.toJson(error);
+            session.getRemote().sendString(errorJSON);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void joinGame(JoinPlayer joinPlayer) {
-        Integer gameID = joinPlayer.getGameID();
-        ChessGame.TeamColor playerColor = joinPlayer.getPlayerColor();
-
+    public Session getSession() {
+        return session;
     }
 
-    public void observeGame(String message) {
-        // Logic to handle a player observing the game
+    public String getAuthToken() {
+        return authToken;
     }
 
-    public void makeMove(String message) {
-        // Logic to handle a player making a move in the game
-    }
-
-    public void leaveGame(String message) {
-        // Logic to handle a player leaving the game
-    }
-
-    public void resignGame(String message) {
-        // Logic to handle a player resigning from the game
+    public void send(String msg) throws IOException {
+        session.getRemote().sendString(msg);
     }
 }

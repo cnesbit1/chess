@@ -12,7 +12,7 @@ public class connectionHTTP {
     public String baseURL;
     public String authToken;
     public connectionHTTP(String authToken, String host, int port) {
-        this.baseURL = String.format("http://%s:%s", host, port);;
+        this.baseURL = String.format("http://%s:%s", host, port);
         this.authToken = authToken;
     }
     public void setAuthToken(String authToken) {
