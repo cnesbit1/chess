@@ -3,6 +3,20 @@ package ui;
 import java.util.Objects;
 
 public class inGameUI extends abstractREPL {
+
+    private enum optionsUI {
+        REDRAWCHESSBOARD(1, "redraw the chess board"),
+        LEAVE(2, "leave"),
+        MAKEMOVE(3, "make a move"),
+        RESIGN(4, "resign"),
+        HIGHLIGHTLEGALMOVES(5, "highlight legal moves");
+        private final int number;
+        private final String description;
+        optionsUI(int number, String description) {
+            this.number = number;
+            this.description = description;
+        }
+    }
     public inGameUI(switchUILoop programLoop, serverFacade serverWrapper) { super(programLoop, serverWrapper); }
     @Override
     public void processInput(String input) {
@@ -23,14 +37,20 @@ public class inGameUI extends abstractREPL {
     }
     @Override
     public void printHelp() {
-        System.out.println("Viewing Gameplay:");
-        System.out.println("We will show you two orientations for the game board.");
-        System.out.println("The board with A1 at the bottom left is white's perspective.");
-        System.out.println("THe board with A1 at the top right is black's perspective.");
+        System.out.println("Redraw Chess Board: update the display of the chessboard.");
+        System.out.println("Leave: removes the user from the game.");
+        System.out.println("Make Move: allows the user to move a chess piece.");
+        System.out.println("Resign: concede the game to the opponent");
+        System.out.println("Highlight Legal Moves: show all possible legal moves for piece");
         System.out.println();
     }
     @Override
     public void showUIPrompt() {
+        System.out.println("Give an input of 'help' for more possible instructions.");
+        for (inGameUI.optionsUI option : inGameUI.optionsUI.values()) {
+            System.out.println("Enter " + option.number + " to " + option.description + ".");
+        }
+
         System.out.println("Give an input of 'help' for more possible instructions.");
         System.out.println("Black's Perspective:");
         displayChessboard(false);
