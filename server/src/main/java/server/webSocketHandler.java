@@ -16,13 +16,13 @@ public class webSocketHandler {
 
         var conn = connectionManager.getConnection(command.getAuthString(), session);
         if (conn != null) {
-            switch (command.getCommandType()) {
-                case JOIN_PLAYER -> join(conn, msg);
-                case JOIN_OBSERVER -> observe(conn, msg);
-                case MAKE_MOVE -> move(conn, msg);
-                case LEAVE -> leave(conn, msg);
-                case RESIGN -> resign(conn, msg);
-            }
+//            switch (command.getCommandType()) {
+//                case JOIN_PLAYER -> join(conn, msg);
+//                case JOIN_OBSERVER -> observe(conn, msg);
+//                case MAKE_MOVE -> move(conn, msg);
+//                case LEAVE -> leave(conn, msg);
+//                case RESIGN -> resign(conn, msg);
+//            }
         } else Connection.sendError(session, "unknown user");
     }
 }

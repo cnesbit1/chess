@@ -22,8 +22,25 @@ public class inGameUI extends abstractREPL {
     public void processInput(String input) {
         try {
             if (Objects.equals(input, "quit")) { throw new Exception(); }
+
             int choice = Integer.parseInt(input);
             if (choice == 1) {
+                programLoop.switchToSignedIn();
+                changeUI();
+            }
+            else if (choice == 2) {
+                programLoop.switchToSignedIn();
+                changeUI();
+            }
+            else if (choice == 3) {
+                programLoop.switchToSignedIn();
+                changeUI();
+            }
+            else if (choice == 4) {
+                programLoop.switchToSignedIn();
+                changeUI();
+            }
+            else if (choice == 5) {
                 programLoop.switchToSignedIn();
                 changeUI();
             }
@@ -51,7 +68,7 @@ public class inGameUI extends abstractREPL {
             System.out.println("Enter " + option.number + " to " + option.description + ".");
         }
 
-        System.out.println("Give an input of 'help' for more possible instructions.");
+        System.out.println();
         System.out.println("Black's Perspective:");
         displayChessboard(false);
 

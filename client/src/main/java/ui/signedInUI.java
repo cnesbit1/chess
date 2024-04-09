@@ -26,7 +26,7 @@ public class signedInUI extends abstractREPL {
     @Override
     public void processInput(String input) {
         try {
-            if (Objects.equals(input, "quit")) { throw new Exception(); }
+//            if (Objects.equals(input, "quit")) { throw new Exception(); }
 
             int choice = Integer.parseInt(input);
             if (choice == 1) {
@@ -48,6 +48,7 @@ public class signedInUI extends abstractREPL {
                 serverWrapper.createGame(serverWrapper.conn.authToken, gamename);
                 System.out.println();
                 System.out.println("Successful Game Created");
+                System.out.println();
             }
             else if (choice == 3) {
                 System.out.println("Input GameID:");
@@ -57,6 +58,7 @@ public class signedInUI extends abstractREPL {
                 serverWrapper.joinGame(serverWrapper.conn.authToken, Integer.parseInt(gameID), playerColor);
                 System.out.println();
                 System.out.println("Successful Game Joined");
+                System.out.println();
                 programLoop.switchToInGame();
                 changeUI();
             }
@@ -66,6 +68,7 @@ public class signedInUI extends abstractREPL {
                 serverWrapper.joinGame(serverWrapper.conn.authToken, Integer.parseInt(gameID), null);
                 System.out.println();
                 System.out.println("Successful Game Joined");
+                System.out.println();
                 programLoop.switchToInGame();
                 changeUI();
             }
@@ -73,6 +76,7 @@ public class signedInUI extends abstractREPL {
                 serverWrapper.logout(serverWrapper.conn.authToken);
                 System.out.println();
                 System.out.println("Successful Logout");
+                System.out.println();
                 programLoop.switchToSignedOut();
                 changeUI();
             }

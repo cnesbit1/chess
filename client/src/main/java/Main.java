@@ -10,5 +10,6 @@ public class Main {
         switchUILoop programLoop = new switchUILoop(port);
         programLoop.run();
         // End of Program
+        System.exit(0);
     }
 }
