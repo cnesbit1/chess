@@ -1,12 +1,12 @@
 package server;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import dataAccess.AuthDAO;
 import org.eclipse.jetty.websocket.api.Session;
-import webSocketMessages.severMessages.Notification;
 
 public class ConnectionManager {
     public final ConcurrentHashMap<Integer, Collection<Connection>> connections = new ConcurrentHashMap<>();
@@ -29,9 +29,21 @@ public class ConnectionManager {
         return null;
     }
 
-    public void add(Integer gameID, String authToken, Session session) {
+    public Connection add(Integer gameID, String authToken, Session session) {
         Connection conn = new Connection(session, authToken);
-        connections.get(gameID).add(conn);
+
+        // Get the collection of connections for the specified gameID
+        Collection<Connection> gameConnections = connections.get(gameID);
+
+        // If there are no connections for the specified gameID, create a new collection
+        if (gameConnections == null) {
+            gameConnections = new ArrayList<>();
+            connections.put(gameID, gameConnections);
+        }
+
+        // Add the new connection to the collection
+        gameConnections.add(conn);
+        return conn;
     }
 
     public void remove(Integer gameID, String authToken) {

@@ -30,7 +30,6 @@ import webSocketMessages.userCommands.UserGameCommand;
 
 import static webSocketMessages.userCommands.UserGameCommand.CommandType.*;
 
-@WebSocket
 public class Server {
 
     private UserDAO userDAO;
@@ -69,7 +68,7 @@ public class Server {
 
     private void registerEndpoints() {
         // Define your endpoints here
-        Spark.webSocket("/connect", webSocketHandler.class);
+        Spark.webSocket("/connect", new webSocketHandler(authDAO, gameDAO, userDAO));
         Spark.delete("/db", this::clearApplication);
         Spark.post("/user", this::registerUser);
         Spark.post("/session", this::login);

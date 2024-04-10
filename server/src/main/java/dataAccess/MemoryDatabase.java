@@ -96,6 +96,11 @@ public class MemoryDatabase implements DataAccess {
         games.put(gameID, newGameData);
     }
 
+    @Override
+    public void updateFullGame(GameData gameData) throws DataAccessException {
+
+    }
+
     public Map<String, UserData> getAllUsers() {
         return users;
     }

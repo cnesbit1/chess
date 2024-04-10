@@ -1,5 +1,6 @@
 package dataAccess;
 
+import chess.ChessGame;
 import model.GameData;
 
 import java.util.Collection;
@@ -26,6 +27,10 @@ public class GameDAO {
 
     public void joinGame(String username, int gameID, String clientColor) throws DataAccessException {
         this.database.updateGame(username, gameID, clientColor);
+    }
+
+    public void updateGame(GameData gameData) throws DataAccessException {
+        this.database.updateFullGame(gameData);
     }
 
     public boolean userExists(String username, int gameID, String clientColor) throws DataAccessException {

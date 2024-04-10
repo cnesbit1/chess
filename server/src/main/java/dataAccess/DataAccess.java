@@ -1,10 +1,12 @@
 package dataAccess;
+import chess.ChessGame;
 import dataAccess.DataAccessException;
 import exceptions.NoAuthException;
 import model.UserData;
 import model.GameData;
 import model.AuthData;
 
+import javax.xml.crypto.Data;
 import java.util.Collection;
 import java.util.Map;
 
@@ -31,6 +33,8 @@ public interface DataAccess {
 
     // Helper methods for users, games, and auth
     void updateGame(String username, int gameID, String clientColor) throws DataAccessException;
+
+    void updateFullGame(GameData gameData) throws DataAccessException;
 
     boolean userExistsInGame(String username, int gameID, String clientColor) throws DataAccessException;
 

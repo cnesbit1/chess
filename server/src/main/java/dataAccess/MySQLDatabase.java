@@ -216,7 +216,6 @@ public class MySQLDatabase implements DataAccess {
         catch (NoAuthException e) {
             throw new NoAuthException();
         }
-
     }
 
     // Additional helper and testing methods
@@ -271,6 +270,22 @@ public class MySQLDatabase implements DataAccess {
                 preparedStatement.setInt(2, gameID);
                 preparedStatement.executeUpdate();
             }
+        } catch (SQLException e) {
+            throw new DataAccessException("Database Error");
+        }
+    }
+
+    public void updateFullGame(GameData gameData) throws DataAccessException {
+        String updateStatement = "UPDATE games SET whiteusername = ?, blackusername = ?, gamename = ?, chessgame = ? WHERE gameid = ?";
+
+        try (Connection connection = DatabaseManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateStatement)) {
+            preparedStatement.setString(1, gameData.whiteUsername());
+            preparedStatement.setString(2, gameData.blackUsername());
+            preparedStatement.setString(3, gameData.gameName());
+            preparedStatement.setString(4, new Gson().toJson(gameData.game()));
+            preparedStatement.setInt(5, gameData.gameID());
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataAccessException("Database Error");
         }
