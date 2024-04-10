@@ -31,7 +31,7 @@ class ServerFacadeTest {
         System.out.println("Started test HTTP server on " + port);
 
         conn = new connectionHTTP(null, "localhost", port);
-        webConn = new connectionWebSocket(null, "localhost", port);
+//        webConn = new connectionWebSocket(null, "localhost", port);
         this.serverWrapper = new serverFacade(conn, webConn);
         this.serverWrapper.conn.sendDeleteRequest("/db", null);
     }

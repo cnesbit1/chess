@@ -1,6 +1,7 @@
 package server;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import dataAccess.AuthDAO;
 import dataAccess.DataAccessException;
@@ -17,6 +18,7 @@ import webSocketMessages.userCommands.*;
 
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Objects;
 
 @WebSocket
@@ -68,7 +70,7 @@ public class webSocketHandler {
                     break;
                 case MAKE_MOVE:
                     MakeMove makeMove = gson.fromJson(msg, MakeMove.class);
-//                    conn.makeMove(msg);
+                    this.makeMove(makeMove, conn, authToken);
                     break;
                 case LEAVE:
                     Leave leave = gson.fromJson(msg, Leave.class);
@@ -76,7 +78,7 @@ public class webSocketHandler {
                     break;
                 case RESIGN:
                     Resign resign = gson.fromJson(msg, Resign.class);
-//                    conn.resignGame(msg);
+                    resignGame(resign, conn, authToken);
                     break;
                 default:
                     break;
@@ -128,8 +130,30 @@ public class webSocketHandler {
         connectionManager.broadcast(authToken, notificationJson, gameID);
     }
 
-    public void makeMove(String message) {
-        // Logic to handle a player making a move in the game
+    public void makeMove(MakeMove makeMove, Connection conn, String authToken) throws Exception {
+        String username = authDAO.getAuth(authToken).username();
+        ChessMove move = makeMove.getMove();
+        Integer gameID = makeMove.getGameID();
+        GameData gameData = gameDAO.getGame(gameID);
+        if (gameData == null) {
+            throw new Exception();
+        }
+
+        ChessGame game = gameData.game();
+        Collection<ChessMove> moves = game.validMoves(move.getStartPosition());
+        if (!moves.contains(move)) {
+            throw new Exception();
+        }
+        if (username.equals(gameData.whiteUsername()) & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.WHITE) {
+            throw new Exception();
+        }
+        else if (username.equals(gameData.blackUsername()) & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.BLACK) {
+            throw new Exception();
+        }
+
+        if (!username.equals(gameData.whiteUsername()) & !username.equals(gameData.blackUsername())) {
+            throw new Exception();
+        }
     }
 
     public void leaveGame(Leave leave, Connection conn, String authToken) throws Exception {
@@ -152,13 +176,34 @@ public class webSocketHandler {
         connectionManager.remove(newGameData.gameID(), authToken);
 
         Gson gson = new Gson();
-        Notification notification = new Notification(String.format("%s has left the game.", authDAO.getAuth(authToken).username()));
+        Notification notification = new Notification(String.format("%s has left the game.", username));
         String notificationJson = gson.toJson(notification);
         connectionManager.broadcast(authToken, notificationJson, gameID);
 
     }
 
-    public void resignGame(String message) {
-        // Logic to handle a player resigning from the game
+    public void resignGame(Resign resign, Connection conn, String authToken) throws Exception {
+        String username = authDAO.getAuth(authToken).username();
+        Integer gameID = resign.getGameID();
+        GameData gameData = gameDAO.getGame(gameID);
+        if (gameData == null) {
+            throw new Exception();
+        }
+        GameData newGameData = gameData;
+        ChessGame game = newGameData.game();
+        if (game.isGameComplete()) {
+            throw new Exception();
+        }
+        if (!username.equals(gameData.whiteUsername()) & !username.equals(gameData.blackUsername())) {
+            throw new Exception();
+        }
+        game.endGame();
+        newGameData = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
+        gameDAO.updateGame(newGameData);
+
+        Gson gson = new Gson();
+        Notification notification = new Notification(String.format("%s has resigned.", username));
+        String notificationJson = gson.toJson(notification);
+        connectionManager.broadcastGame(notificationJson, gameID);
     }
 }

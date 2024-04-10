@@ -16,14 +16,25 @@ public class ChessGame {
     private TeamColor turn;
     private ChessBoard gameBoard;
 
+    public boolean gameComplete;
+
     public ChessGame() {
         this.turn = TeamColor.WHITE;
         this.gameBoard = new ChessBoard();
+        this.gameComplete = false;
     }
 
     public ChessGame(TeamColor turn, ChessBoard gameBoard) {
         this.turn = turn;
         this.gameBoard = gameBoard;
+    }
+
+    public void endGame() {
+        this.gameComplete = true;
+    }
+
+    public boolean isGameComplete() {
+        return this.gameComplete;
     }
 
     /**
