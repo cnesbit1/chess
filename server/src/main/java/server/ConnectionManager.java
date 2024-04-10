@@ -51,20 +51,20 @@ public class ConnectionManager {
         gameConnections.removeIf(conn -> conn.getAuthToken().equals(authToken));
     }
 
-    public void broadcast(String excludeAuthToken, String notificationJson, Integer gameID) throws IOException {
+    public void broadcast(String excludeAuthToken, String json, Integer gameID) throws IOException {
         for (var c : connections.get(gameID)) {
             if (c.getSession().isOpen()) {
                 if (!c.getAuthToken().equals(excludeAuthToken)) {
-                    c.send(notificationJson);
+                    c.send(json);
                 }
             }
         }
     }
 
-    public void broadcastGame(String notificationJson, Integer gameID) throws IOException {
+    public void broadcastGame(String json, Integer gameID) throws IOException {
         for (var c : connections.get(gameID)) {
             if (c.getSession().isOpen()) {
-                c.send(notificationJson);
+                c.send(json);
             }
         }
     }

@@ -135,25 +135,42 @@ public class webSocketHandler {
         ChessMove move = makeMove.getMove();
         Integer gameID = makeMove.getGameID();
         GameData gameData = gameDAO.getGame(gameID);
+        String whiteUsername = gameData.whiteUsername();
+        String blackUsername = gameData.blackUsername();
         if (gameData == null) {
             throw new Exception();
         }
 
         ChessGame game = gameData.game();
+        if (game.isGameComplete()) {
+            throw new Exception();
+        }
         Collection<ChessMove> moves = game.validMoves(move.getStartPosition());
         if (!moves.contains(move)) {
             throw new Exception();
         }
-        if (username.equals(gameData.whiteUsername()) & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.WHITE) {
+        if (username.equals(whiteUsername) & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.WHITE) {
             throw new Exception();
         }
-        else if (username.equals(gameData.blackUsername()) & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.BLACK) {
+        else if (username.equals(blackUsername) & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.BLACK) {
             throw new Exception();
         }
 
-        if (!username.equals(gameData.whiteUsername()) & !username.equals(gameData.blackUsername())) {
+        if (!username.equals(whiteUsername) & !username.equals(blackUsername)) {
             throw new Exception();
         }
+        game.makeMove(move);
+        GameData newGameData = new GameData(gameID, whiteUsername, blackUsername, gameData.gameName(), game);
+        gameDAO.updateGame(newGameData);
+
+        LoadGame loadGame = new LoadGame(gameData);
+        Gson gson = new Gson();
+        String loadGameJson = gson.toJson(loadGame);
+        connectionManager.broadcastGame(loadGameJson, gameID);
+
+        Notification notification = new Notification(String.format("%s has made a move.", username));
+        String notificationJson = gson.toJson(notification);
+        connectionManager.broadcast(authToken, notificationJson, gameID);
     }
 
     public void leaveGame(Leave leave, Connection conn, String authToken) throws Exception {
