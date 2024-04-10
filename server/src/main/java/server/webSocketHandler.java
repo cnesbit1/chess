@@ -4,10 +4,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
 import dataAccess.AuthDAO;
-import dataAccess.DataAccessException;
 import dataAccess.GameDAO;
-import dataAccess.UserDAO;
-import exceptions.NoAuthException;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.Session;
@@ -16,8 +13,7 @@ import webSocketMessages.severMessages.LoadGame;
 import webSocketMessages.severMessages.Notification;
 import webSocketMessages.userCommands.*;
 
-import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -27,13 +23,11 @@ public class webSocketHandler {
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
 
-    private final UserDAO userDAO;
 
-    public webSocketHandler(AuthDAO authDAO, GameDAO gameDAO, UserDAO userDAO) {
+    public webSocketHandler(AuthDAO authDAO, GameDAO gameDAO) {
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;
         this.connectionManager = new ConnectionManager(authDAO);
-        this.userDAO = userDAO;
     }
 
     @OnWebSocketMessage
@@ -134,14 +128,37 @@ public class webSocketHandler {
         String username = authDAO.getAuth(authToken).username();
         ChessMove move = makeMove.getMove();
         Integer gameID = makeMove.getGameID();
+
         GameData gameData = gameDAO.getGame(gameID);
-        String whiteUsername = gameData.whiteUsername();
-        String blackUsername = gameData.blackUsername();
         if (gameData == null) {
             throw new Exception();
         }
 
         ChessGame game = gameData.game();
+        if (game.getBoard().checkEmpty()) {
+            game.getBoard().resetBoard();
+        }
+        String whiteUsername = gameData.whiteUsername();
+        String blackUsername = gameData.blackUsername();
+        boolean isWhite = false;
+        boolean isBlack = false;
+        if (username.equals(whiteUsername)) {
+            isWhite = true;
+            if (game.getTeamTurn() != ChessGame.TeamColor.WHITE) {
+                throw new Exception();
+            }
+        }
+        else if (username.equals(blackUsername)) {
+            isBlack = true;
+            if (game.getTeamTurn() != ChessGame.TeamColor.BLACK) {
+                throw new Exception();
+            }
+        }
+        else {
+            throw new Exception();
+        }
+
+
         if (game.isGameComplete()) {
             throw new Exception();
         }
@@ -149,17 +166,16 @@ public class webSocketHandler {
         if (!moves.contains(move)) {
             throw new Exception();
         }
-        if (username.equals(whiteUsername) & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.WHITE) {
+        if (isWhite & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.WHITE) {
             throw new Exception();
         }
-        else if (username.equals(blackUsername) & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.BLACK) {
+        else if (isBlack & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.BLACK) {
             throw new Exception();
         }
 
-        if (!username.equals(whiteUsername) & !username.equals(blackUsername)) {
-            throw new Exception();
-        }
         game.makeMove(move);
+
+
         GameData newGameData = new GameData(gameID, whiteUsername, blackUsername, gameData.gameName(), game);
         gameDAO.updateGame(newGameData);
 

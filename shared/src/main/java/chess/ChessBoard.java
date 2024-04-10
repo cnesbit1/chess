@@ -10,9 +10,7 @@ import java.util.Arrays;
  */
 public class ChessBoard {
     private ChessPiece[][] squares = new ChessPiece[8][8];
-    public ChessBoard() {
-        this.resetBoard();
-    }
+    public ChessBoard() {}
 
     /**
      * Adds a chess piece to the chessboard
@@ -102,5 +100,16 @@ public class ChessBoard {
         // Add Kings
         addPiece(new ChessPosition(8, 5), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.KING));
         addPiece(new ChessPosition(1, 5), new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.KING));
+    }
+
+    public boolean checkEmpty() {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                if (squares[row][col] != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
