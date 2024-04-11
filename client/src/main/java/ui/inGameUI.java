@@ -88,6 +88,12 @@ public class inGameUI extends abstractREPL {
                     type = convertStringToType(promotionPiece);
                 }
                 ChessMove move = new ChessMove(startPosition, endPosition, type);
+//                ChessGame game = loadGame.getGame().game();
+//                if (serverWrapper.username.equalsIgnoreCase(loadGame.getGame().whiteUsername())) {
+//
+//                }
+
+
                 MakeMove makeMove = new MakeMove(serverWrapper.conn.authToken, gameData.gameID(), move);
                 Gson gson = new Gson();
                 String makeMoveJson = gson.toJson(makeMove);

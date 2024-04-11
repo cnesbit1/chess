@@ -174,9 +174,6 @@ public class webSocketHandler {
         }
 
         game.makeMove(move);
-        if (game.isGameComplete()) {
-            throw new Exception("Checkmate or Stalemate");
-        }
 
         GameData newGameData = new GameData(gameID, whiteUsername, blackUsername, gameData.gameName(), game);
         gameDAO.updateGame(newGameData);
@@ -186,9 +183,31 @@ public class webSocketHandler {
         String loadGameJson = gson.toJson(loadGame);
         connectionManager.broadcastGame(loadGameJson, gameID);
 
-        Notification notification = new Notification(String.format("%s has made a move.", username));
-        String notificationJson = gson.toJson(notification);
-        connectionManager.broadcast(authToken, notificationJson, gameID);
+        if (isWhite & game.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+            Notification notification = new Notification(String.format("%s has made a move and put Black in checkmate.", username));
+            String notificationJson = gson.toJson(notification);
+            connectionManager.broadcast(authToken, notificationJson, gameID);
+        }
+        else if (isBlack & game.isInCheckmate(ChessGame.TeamColor.WHITE)) {
+            Notification notification = new Notification(String.format("%s has made a move and put White in checkmate.", username));
+            String notificationJson = gson.toJson(notification);
+            connectionManager.broadcast(authToken, notificationJson, gameID);
+        }
+        else if (isWhite & game.isInCheck(ChessGame.TeamColor.BLACK)) {
+            Notification notification = new Notification(String.format("%s has made a move and put Black in check.", username));
+            String notificationJson = gson.toJson(notification);
+            connectionManager.broadcast(authToken, notificationJson, gameID);
+        }
+        else if (isBlack & game.isInCheck(ChessGame.TeamColor.WHITE)) {
+            Notification notification = new Notification(String.format("%s has made a move and put White in check.", username));
+            String notificationJson = gson.toJson(notification);
+            connectionManager.broadcast(authToken, notificationJson, gameID);
+        }
+        else {
+            Notification notification = new Notification(String.format("%s has made a move.", username));
+            String notificationJson = gson.toJson(notification);
+            connectionManager.broadcast(authToken, notificationJson, gameID);
+        }
     }
 
     public void leaveGame(Leave leave, Connection conn, String authToken) throws Exception {

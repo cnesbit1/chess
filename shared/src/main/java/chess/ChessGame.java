@@ -171,13 +171,21 @@ public class ChessGame {
         ChessPosition king_pos = null;
         ChessPiece check_king = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
         Collection<ChessMove> allMoves = new ArrayList<ChessMove>();
-
         for (int x = 1; x <=8; x++) {
             for (int y = 1; y <=8; y++) {
                 ChessPiece curr_piece = gameBoard.getPiece(new ChessPosition(x, y));
                 ChessPosition curr_pos = new ChessPosition(x, y);
 
                 if (curr_piece != null && curr_piece.equals(check_king)) { king_pos = curr_pos; }
+            }
+        }
+
+
+        for (int x = 1; x <=8; x++) {
+            for (int y = 1; y <=8; y++) {
+                ChessPiece curr_piece = gameBoard.getPiece(new ChessPosition(x, y));
+                ChessPosition curr_pos = new ChessPosition(x, y);
+
                 if (curr_piece != null && curr_piece.getTeamColor() != teamColor) {
                     Collection<ChessMove> pieceMoves = curr_piece.pieceMoves(gameBoard, curr_pos);
                     allMoves.addAll(pieceMoves);

@@ -11,11 +11,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="shared" />
     <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="junit.jupiter" level="project" />
-    <orderEntry type="library" name="google.code.gson" level="project" />
-    <orderEntry type="library" name="sparkjava.spark.core" level="project" />
-    <orderEntry type="library" name="slf4j.simple" level="project" />
-    <orderEntry type="library" name="junit.jupiter1" level="project" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit4">
         <CLASSES>
@@ -26,6 +21,11 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="junit.jupiter1" level="project" />
+    <orderEntry type="library" name="junit.jupiter" level="project" />
+    <orderEntry type="library" name="slf4j.simple" level="project" />
+    <orderEntry type="library" name="google.code.gson" level="project" />
+    <orderEntry type="library" name="sparkjava.spark.core" level="project" />
     <orderEntry type="library" name="mysql.connector.java" level="project" />
     <orderEntry type="library" name="springframework.security.spring.core" level="project" />
     <orderEntry type="library" name="glassfish.tyrus.bundles.standalone.client" level="project" />
