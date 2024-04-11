@@ -10,6 +10,7 @@ import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 @ClientEndpoint
 public class ConnectionWebSocket {
@@ -30,6 +31,7 @@ public class ConnectionWebSocket {
             this.notificationGameplayHandler = notificationGameplayHandler;
             this.notificationJoinGameHandler = notificationJoinGameHandler;
             this.firstLoadGame = true;
+            onMessage("hi");
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, new URI(this.baseURL));
@@ -46,6 +48,7 @@ public class ConnectionWebSocket {
 
     @OnMessage
     public void onMessage(String message) {
+        if (Objects.equals(message, "hi")) { return; }
         Gson gson = new Gson();
         ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
         ServerMessage.ServerMessageType type = serverMessage.getServerMessageType();
