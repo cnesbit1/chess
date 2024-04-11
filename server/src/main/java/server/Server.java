@@ -44,11 +44,6 @@ public class Server {
         this.userDAO = new UserDAO(this.mySQLDatabase);
         this.authDAO = new AuthDAO(this.mySQLDatabase);
         this.gameDAO = new GameDAO(this.mySQLDatabase);
-//        try {
-//            this.userDAO.clear();
-//            this.authDAO.clear();
-//            this.gameDAO.clear();
-//        } catch (Exception e) {}
 
 
         // Register your endpoints and handle exceptions here.

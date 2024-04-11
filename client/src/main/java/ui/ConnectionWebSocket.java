@@ -44,28 +44,6 @@ public class ConnectionWebSocket {
     public void setNotificationGameplayHandler(NotificationHandler notificationGameplayHandler) { this.notificationGameplayHandler = notificationGameplayHandler; }
     public void setNotificationJoinGameHandler(NotificationHandler notificationJoinGameHandler) { this.notificationJoinGameHandler = notificationJoinGameHandler; }
 
-    @OnOpen
-    public void onOpen(Session session) {
-        System.out.println("Connected to server using web socket");
-        this.session = session;
-    }
-
-    @OnClose
-    public void onClose(Session session, CloseReason closeReason) {
-        System.out.println("Disconnected from server with web sockets: " + closeReason.getReasonPhrase());
-        this.session = null;
-    }
-
-    public void close() {
-        if (session != null && session.isOpen()) {
-            try {
-                session.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     @OnMessage
     public void onMessage(String message) {
         Gson gson = new Gson();
