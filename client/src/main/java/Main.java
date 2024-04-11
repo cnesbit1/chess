@@ -1,5 +1,5 @@
-import chess.*;
-import server.Server;
+//import chess.*;
+//import server.Server;
 import ui.switchUILoop;
 
 public class Main {
