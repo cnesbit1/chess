@@ -7,7 +7,6 @@ import model.AuthData;
 import model.GameData;
 import responses.JoinRequestData;
 import responses.ListGames;
-import webSocketMessages.severMessages.LoadGame;
 import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
 

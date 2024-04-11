@@ -1,14 +1,11 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
+
 import model.GameData;
 import responses.ListGames;
-import webSocketMessages.severMessages.LoadGame;
 import webSocketMessages.severMessages.ServerMessage;
 
 import java.util.Collection;
-import java.util.Objects;
 
 public class signedInUI extends abstractREPL {
     private enum optionsUI {
