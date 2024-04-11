@@ -44,9 +44,9 @@ public class ChessPiece {
     public PieceType getPieceType() { return type; }
 
     public String toString() {
-        String actual_color = pieceColor.name();
-        String actual_type = type.name();
-        return String.format("-%s, %s-", actual_color, actual_type);
+        String actualColor = pieceColor.name();
+        String actualType = type.name();
+        return String.format("-%s, %s-", actualColor, actualType);
     }
 
     public boolean equals(Object obj) {

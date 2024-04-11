@@ -46,12 +46,12 @@ public class ChessMove {
     }
 
     public String toString() {
-        String formatted_move = String.format("{%s to %s", startPosition, endPosition);
+        String formattedMove = String.format("{%s to %s", startPosition, endPosition);
         if (promotionPiece != null) {
-            formatted_move += String.format(" promoted to %s}", promotionPiece);
+            formattedMove += String.format(" promoted to %s}", promotionPiece);
         }
-        else { formatted_move += "}"; }
-        return formatted_move;
+        else { formattedMove += "}"; }
+        return formattedMove;
     }
 
     public boolean equals(Object obj) {

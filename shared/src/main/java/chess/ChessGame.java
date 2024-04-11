@@ -168,33 +168,33 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        ChessPosition king_pos = null;
-        ChessPiece check_king = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
+        ChessPosition kingPos = null;
+        ChessPiece checkKing = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
         Collection<ChessMove> allMoves = new ArrayList<ChessMove>();
         for (int x = 1; x <=8; x++) {
             for (int y = 1; y <=8; y++) {
-                ChessPiece curr_piece = gameBoard.getPiece(new ChessPosition(x, y));
-                ChessPosition curr_pos = new ChessPosition(x, y);
+                ChessPiece currPiece = gameBoard.getPiece(new ChessPosition(x, y));
+                ChessPosition currPos = new ChessPosition(x, y);
 
-                if (curr_piece != null && curr_piece.equals(check_king)) { king_pos = curr_pos; }
+                if (currPiece != null && currPiece.equals(checkKing)) { kingPos = currPos; }
             }
         }
 
 
         for (int x = 1; x <=8; x++) {
             for (int y = 1; y <=8; y++) {
-                ChessPiece curr_piece = gameBoard.getPiece(new ChessPosition(x, y));
-                ChessPosition curr_pos = new ChessPosition(x, y);
+                ChessPiece currPiece = gameBoard.getPiece(new ChessPosition(x, y));
+                ChessPosition currPos = new ChessPosition(x, y);
 
-                if (curr_piece != null && curr_piece.getTeamColor() != teamColor) {
-                    Collection<ChessMove> pieceMoves = curr_piece.pieceMoves(gameBoard, curr_pos);
+                if (currPiece != null && currPiece.getTeamColor() != teamColor) {
+                    Collection<ChessMove> pieceMoves = currPiece.pieceMoves(gameBoard, currPos);
                     allMoves.addAll(pieceMoves);
                 }
             }
         }
 
         for (ChessMove move : allMoves) {
-            if (move.getEndPosition().equals(king_pos)) { return true; }
+            if (move.getEndPosition().equals(kingPos)) { return true; }
         }
         return false;
     }
