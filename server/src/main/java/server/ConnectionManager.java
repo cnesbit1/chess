@@ -4,17 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
-import dataAccess.AuthDAO;
 import org.eclipse.jetty.websocket.api.Session;
 
 public class ConnectionManager {
-    public final ConcurrentHashMap<Integer, Collection<Connection>> connections = new ConcurrentHashMap<>();
-    private final AuthDAO authDAO;
+    public final ConcurrentHashMap<Integer, CopyOnWriteArraySet<Connection>> connections = new ConcurrentHashMap<>();
 
-    public ConnectionManager(AuthDAO authDAO) {
-        this.authDAO = authDAO;
-    }
+    public ConnectionManager() {}
 
     public Connection getConnection(String authString) {
         try {
@@ -32,17 +29,18 @@ public class ConnectionManager {
     public Connection add(Integer gameID, String authToken, Session session) {
         Connection conn = new Connection(session, authToken);
 
-        // Get the collection of connections for the specified gameID
-        Collection<Connection> gameConnections = connections.get(gameID);
+        ConcurrentHashMap<Integer, CopyOnWriteArraySet<Connection>> gameConnections = connections;
+        CopyOnWriteArraySet<Connection> connectionSet = gameConnections.get(gameID);
 
-        // If there are no connections for the specified gameID, create a new collection
-        if (gameConnections == null) {
-            gameConnections = new ArrayList<>();
-            connections.put(gameID, gameConnections);
+        if (connectionSet == null) {
+            connectionSet = new CopyOnWriteArraySet<>();
+            CopyOnWriteArraySet<Connection> existingSet = gameConnections.putIfAbsent(gameID, connectionSet);
+            if (existingSet != null) {
+                connectionSet = existingSet;
+            }
         }
 
-        // Add the new connection to the collection
-        gameConnections.add(conn);
+        connectionSet.add(conn);
         return conn;
     }
 

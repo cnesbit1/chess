@@ -21,7 +21,6 @@ public class Connection {
             Error error = new Error(totalErrorMessage);
             Gson gson = new Gson();
             String errorJSON = gson.toJson(error);
-            System.out.println(errorJSON);
             session.getRemote().sendString(errorJSON);
 
         } catch (Exception e) {

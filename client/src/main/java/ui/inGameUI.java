@@ -1,6 +1,19 @@
 package ui;
 
+import chess.*;
+import com.google.gson.Gson;
+import model.GameData;
+import webSocketMessages.severMessages.Error;
+import webSocketMessages.severMessages.LoadGame;
+import webSocketMessages.severMessages.Notification;
+import webSocketMessages.severMessages.ServerMessage;
+import webSocketMessages.userCommands.Leave;
+import webSocketMessages.userCommands.MakeMove;
+import webSocketMessages.userCommands.Resign;
+
 import java.util.Objects;
+
+import static chess.ChessPiece.PieceType.ROOK;
 
 public class inGameUI extends abstractREPL {
 
@@ -17,6 +30,11 @@ public class inGameUI extends abstractREPL {
             this.description = description;
         }
     }
+
+    public LoadGame loadGame;
+    public Notification notification;
+    public Error error;
+
     public inGameUI(switchUILoop programLoop, serverFacade serverWrapper) { super(programLoop, serverWrapper); }
     @Override
     public void processInput(String input) {
@@ -25,20 +43,62 @@ public class inGameUI extends abstractREPL {
 
             int choice = Integer.parseInt(input);
             if (choice == 1) {
-                programLoop.switchToSignedIn();
-                changeUI();
+                GameData gameData = this.loadGame.getGame();
+                ChessGame game = gameData.game();
+                ChessBoard chessBoard = game.getBoard();
+                showChessboard(gameData, chessBoard);
             }
             else if (choice == 2) {
+                Leave leave = new Leave(serverWrapper.conn.authToken, loadGame.getGame().gameID());
+                Gson gson = new Gson();
+                String leaveJson = gson.toJson(leave);
+                serverWrapper.webConn.sendMessage(leaveJson);
                 programLoop.switchToSignedIn();
                 changeUI();
             }
             else if (choice == 3) {
-                programLoop.switchToSignedIn();
-                changeUI();
+                System.out.println("Input Row Number for Piece to be Moved:");
+                int row = Integer.parseInt(scanner.nextLine());
+                System.out.println("Input Column Letter for Piece to be Moved:");
+                String colValue = scanner.nextLine();
+                int col = convertLettertoIndex(colValue);;
+                System.out.println("Input Row Number for Piece Destination:");
+                int rowDest = Integer.parseInt(scanner.nextLine());
+                System.out.println("Input Column Letter for Piece Destination:");
+                String colValueD = scanner.nextLine();
+                int colDest = convertLettertoIndex(colValueD);;
+
+                ChessPosition startPosition = new ChessPosition(row, col);
+                ChessPosition endPosition = new ChessPosition(rowDest, colDest);
+
+                GameData gameData = this.loadGame.getGame();
+                int promotion = 8;
+                if (serverWrapper.username.equalsIgnoreCase("black")) {
+                    promotion = 1;
+                }
+                else if (serverWrapper.username.equalsIgnoreCase("white")) {
+                    promotion = 8;
+                }
+
+                String promotionPiece = null;
+                ChessPiece.PieceType type = null;
+                if (rowDest == promotion) {
+                    System.out.println("Input Promotion Type for Move");
+                    promotionPiece = scanner.nextLine();
+                    type = convertStringToType(promotionPiece);
+                }
+                ChessMove move = new ChessMove(startPosition, endPosition, type);
+                MakeMove makeMove = new MakeMove(serverWrapper.conn.authToken, gameData.gameID(), move);
+                Gson gson = new Gson();
+                String makeMoveJson = gson.toJson(makeMove);
+                serverWrapper.webConn.sendMessage(makeMoveJson);
+
             }
             else if (choice == 4) {
-                programLoop.switchToSignedIn();
-                changeUI();
+                Resign resign = new Resign(serverWrapper.conn.authToken, loadGame.getGame().gameID());
+                Gson gson = new Gson();
+                String resignJson = gson.toJson(resign);
+                serverWrapper.webConn.sendMessage(resignJson);
             }
             else if (choice == 5) {
                 programLoop.switchToSignedIn();
@@ -51,6 +111,30 @@ public class inGameUI extends abstractREPL {
         catch (Exception e) {
             System.out.println("That wasn't a valid choice, try again.");
         }
+    }
+
+    public int convertLettertoIndex(String colValue) throws Exception {
+        return switch (colValue) {
+            case "a" -> 1;
+            case "b" -> 2;
+            case "c" -> 3;
+            case "d" -> 4;
+            case "e" -> 5;
+            case "f" -> 6;
+            case "g" -> 7;
+            case "h" -> 8;
+            default -> throw new Exception();
+        };
+    }
+
+    public ChessPiece.PieceType convertStringToType(String promotionPiece) throws Exception {
+        return switch (promotionPiece) {
+            case "Queen" -> ChessPiece.PieceType.QUEEN;
+            case "Rook" -> ChessPiece.PieceType.ROOK;
+            case "Bishop" -> ChessPiece.PieceType.BISHOP;
+            case "Knight" -> ChessPiece.PieceType.KNIGHT;
+            default -> throw new Exception();
+        };
     }
     @Override
     public void printHelp() {
@@ -67,100 +151,59 @@ public class inGameUI extends abstractREPL {
         for (inGameUI.optionsUI option : inGameUI.optionsUI.values()) {
             System.out.println("Enter " + option.number + " to " + option.description + ".");
         }
+    }
+
+    @Override
+    public void notify(ServerMessage serverMessage) {
+        if (serverMessage instanceof LoadGame) {
+            LoadGame loadGame = (LoadGame) serverMessage;
+            this.loadGame = loadGame;
+            GameData game = loadGame.getGame();
+            ChessGame chessGame = game.game();
+            ChessBoard chessBoard = chessGame.getBoard();
+            if (chessBoard.checkEmpty()) {
+                chessBoard.resetBoard();
+
+                System.out.println();
+                System.out.println("Successful Game Joined");
+                System.out.println();
+            }
+
+            this.showChessboard(game, chessBoard);
+
+            programLoop.switchToInGame();
+            changeUI();
+        }
+        if (serverMessage instanceof Notification) {
+            Notification notification = (Notification) serverMessage;
+            this.notification = notification;
+            String message = notification.getMessage();
+            System.out.println();
+            System.out.println(message);
+            System.out.println();
+        }
+        if (serverMessage instanceof Error) {
+            Error error = (Error) serverMessage;
+            this.error = error;
+            String message = error.getErrorMessage();
+            System.out.println();
+            System.out.println(message);
+            System.out.println();
+        }
+    }
+    public void showChessboard(GameData game, ChessBoard chessBoard) {
+
+        // Print the current board
+        if (serverWrapper.username.equalsIgnoreCase(game.whiteUsername())) {
+            displayChessboard(chessBoard, true);
+        }
+        else if (serverWrapper.username.equalsIgnoreCase(game.blackUsername())) {
+            displayChessboard(chessBoard, false);
+        }
+        else {
+            displayChessboard(chessBoard, true);
+        }
 
         System.out.println();
-        System.out.println("Black's Perspective:");
-        displayChessboard(false);
-
-        System.out.println();
-
-        System.out.println("White's Perspective:");
-        displayChessboard(true);
-    }
-    private void displayChessboard(boolean whiteAtBottom) {
-        String[][] board = populateStartingChessboard();
-        String columns = displayColHeaders(whiteAtBottom);
-        System.out.println(columns);
-        displayRows(board, whiteAtBottom);
-        System.out.println(columns);
-    }
-    private String displayColHeaders(boolean whiteAtBottom) {
-        StringBuilder columnsBuilder = new StringBuilder("    ");
-
-        char colStartLabel = whiteAtBottom ? 'a' : 'h';
-        char colEndLabel = whiteAtBottom ? 'h' : 'a';
-        int colLabelStep = whiteAtBottom ? 1 : -1;
-
-        for (char col = colStartLabel; col != colEndLabel + colLabelStep; col += colLabelStep) {
-            columnsBuilder.append(" ").append(col).append(" ");
-        }
-
-        return columnsBuilder.toString();
-    }
-    private void displayRows(String[][] board, boolean whiteAtBottom) {
-        int rowStart = whiteAtBottom ? 7 : 0;
-        int rowEnd = whiteAtBottom ? -1 : 8;
-        int rowStep = whiteAtBottom ? -1 : 1;
-
-        for (int row = rowStart; row != rowEnd; row += rowStep) {
-            String displayRow = "  " + (row + 1) + " ";
-            System.out.print(displayRow);
-            displayRow(board, row, whiteAtBottom);
-            System.out.println(displayRow);
-        }
-    }
-    private void displayRow(String[][] board, int row, boolean whiteAtBottom) {
-        int colStart = whiteAtBottom ? 0 : 7;
-        int colEnd = whiteAtBottom ? 8 : -1;
-        int colStep = whiteAtBottom ? 1 : -1;
-
-        for (int col = colStart; col != colEnd; col += colStep) {
-            String piece = board[row][col];
-            String textColor;
-            if (Character.isUpperCase(piece.charAt(0))) {
-                textColor = "\u001B[34m";
-            }
-            else {
-                textColor = "\u001B[31m";
-            }
-            String backgroundColor = (row + col) % 2 == 0 ? "\u001B[40m" : "\u001B[47m";
-
-            System.out.print(backgroundColor + textColor + " " + piece + " \u001B[0m");
-        }
-    }
-    private String[][] populateStartingChessboard() {
-        String[][] board = new String[8][8];
-
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                board[row][col] = " ";
-            }
-        }
-
-        board[7][0] = "R";
-        board[7][1] = "N";
-        board[7][2] = "B";
-        board[7][3] = "Q";
-        board[7][4] = "K";
-        board[7][5] = "B";
-        board[7][6] = "N";
-        board[7][7] = "R";
-        for (int col = 0; col < 8; col++) {
-            board[6][col] = "P";
-        }
-
-        board[0][0] = "r";
-        board[0][1] = "n";
-        board[0][2] = "b";
-        board[0][3] = "q";
-        board[0][4] = "k";
-        board[0][5] = "b";
-        board[0][6] = "n";
-        board[0][7] = "r";
-        for (int col = 0; col < 8; col++) {
-            board[1][col] = "p";
-        }
-
-        return board;
     }
 }

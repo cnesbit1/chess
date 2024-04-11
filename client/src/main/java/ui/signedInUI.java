@@ -1,7 +1,12 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import model.GameData;
 import responses.ListGames;
+import webSocketMessages.severMessages.LoadGame;
+import webSocketMessages.severMessages.ServerMessage;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -54,9 +59,6 @@ public class signedInUI extends abstractREPL {
                 System.out.println("Input White or Black:");
                 String playerColor = scanner.nextLine();
                 serverWrapper.joinGame(serverWrapper.conn.authToken, Integer.parseInt(gameID), playerColor);
-                System.out.println();
-                System.out.println("Successful Game Joined");
-                System.out.println();
                 programLoop.switchToInGame();
                 changeUI();
             }
@@ -64,9 +66,6 @@ public class signedInUI extends abstractREPL {
                 System.out.println("Input GameID:");
                 String gameID = scanner.nextLine();
                 serverWrapper.joinGame(serverWrapper.conn.authToken, Integer.parseInt(gameID), null);
-                System.out.println();
-                System.out.println("Successful Game Joined");
-                System.out.println();
                 programLoop.switchToInGame();
                 changeUI();
             }
@@ -106,4 +105,7 @@ public class signedInUI extends abstractREPL {
             System.out.println("Enter " + option.number + " to " + option.description + ".");
         }
     }
+
+    @Override
+    public void notify(ServerMessage serverMessage) {}
 }

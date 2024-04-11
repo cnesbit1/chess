@@ -1,5 +1,6 @@
 package ui;
 import model.AuthData;
+import webSocketMessages.severMessages.ServerMessage;
 
 import java.lang.Exception;
 public class signedOutUI extends abstractREPL {
@@ -35,6 +36,7 @@ public class signedOutUI extends abstractREPL {
                 String email = scanner.nextLine();
                 AuthData authData = serverWrapper.register(username, password, email);
                 serverWrapper.conn.setAuthToken(authData.authToken());
+                serverWrapper.webConn.setAuthToken(authData.authToken());
                 System.out.println();
                 System.out.println("Successful Registration!");
                 programLoop.switchToSignedIn();
@@ -47,6 +49,7 @@ public class signedOutUI extends abstractREPL {
                 String password = scanner.nextLine();
                 AuthData authData = serverWrapper.login(username, password);
                 serverWrapper.conn.setAuthToken(authData.authToken());
+                serverWrapper.webConn.setAuthToken(authData.authToken());
                 System.out.println();
                 System.out.println("Successful Log in!");
                 programLoop.switchToSignedIn();
@@ -76,5 +79,7 @@ public class signedOutUI extends abstractREPL {
             System.out.println("Enter " + option.number + " to " + option.description + ".");
         }
     }
+    @Override
+    public void notify(ServerMessage servermessage) {}
 
 }

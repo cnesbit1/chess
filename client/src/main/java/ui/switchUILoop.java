@@ -21,11 +21,13 @@ public class switchUILoop {
     public switchUILoop(int port) {
         currentState = states.SIGNEDOUT;
         connectionHTTP conn = new connectionHTTP(null, "localhost", port);
-        connectionWebSocket webConn = new connectionWebSocket(null, "localhost", port);
+        connectionWebSocket webConn = new connectionWebSocket(null, "localhost", port, null, null);
         serverFacade serverWrapper = new serverFacade(conn, webConn);
         loggedInUI = new signedInUI(this, serverWrapper);
         loggedOutUI = new signedOutUI(this, serverWrapper);
         gameplayUI = new inGameUI(this, serverWrapper);
+        webConn.setNotificationGameplayHandler(gameplayUI);
+        webConn.setNotificationJoinGameHandler(loggedInUI);
     }
 
     public void run() {
@@ -54,6 +56,7 @@ public class switchUILoop {
             if (shouldQuit) { break; }
         }
         System.out.println("Exiting...");
+        System.exit(0);
     }
 
     public void quitProgram() { currentState = states.QUIT; }

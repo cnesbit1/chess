@@ -83,10 +83,6 @@ public class Server {
         Spark.awaitStop();
     }
 
-    private Object webSocketHandler(Request req, Response res) throws ResponseException, DataAccessException {
-        return RegisterHandler.handle(req, res, new UserService(this.userDAO, this.authDAO));
-    }
-
     private Object clearApplication(Request req, Response res) throws ResponseException, DataAccessException {
         return ClearHandler.handle(req, res, new ClearService(this.authDAO, this.userDAO, this.gameDAO));
     }

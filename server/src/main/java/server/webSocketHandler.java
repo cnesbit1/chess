@@ -27,7 +27,7 @@ public class webSocketHandler {
     public webSocketHandler(AuthDAO authDAO, GameDAO gameDAO) {
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;
-        this.connectionManager = new ConnectionManager(authDAO);
+        this.connectionManager = new ConnectionManager();
     }
 
     @OnWebSocketMessage
@@ -79,7 +79,7 @@ public class webSocketHandler {
             }
         }
         catch (Exception e) {
-            Connection.sendError(session, "unknown user");
+            Connection.sendError(session, e.getMessage());
         }
     }
 
@@ -90,13 +90,13 @@ public class webSocketHandler {
         Notification notification = null;
         if (playerColor == ChessGame.TeamColor.WHITE) {
             if (!Objects.equals(gameData.whiteUsername(), authDAO.getAuth(authToken).username())) {
-                throw new Exception();
+                throw new Exception("User tried to connect with the wrong color for joinPlayer, whitw");
             }
             notification = new Notification(String.format("%s has joined the game as white.", gameData.whiteUsername()));
         }
         else {
             if (!Objects.equals(gameData.blackUsername(), authDAO.getAuth(authToken).username())) {
-                throw new Exception();
+                throw new Exception("User tried to connect with the wrong color for joinPlayer, black");
             }
             notification = new Notification(String.format("%s has joined the game as black.", gameData.blackUsername()));
         }
@@ -113,7 +113,7 @@ public class webSocketHandler {
         Integer gameID = joinObserver.getGameID();
         GameData gameData = gameDAO.getGame(gameID);
         if (gameData == null) {
-            throw new Exception();
+            throw new Exception("No game found");
         }
         LoadGame loadGame = new LoadGame(gameData);
         Gson gson = new Gson();
@@ -131,7 +131,7 @@ public class webSocketHandler {
 
         GameData gameData = gameDAO.getGame(gameID);
         if (gameData == null) {
-            throw new Exception();
+            throw new Exception("No game found");
         }
 
         ChessGame game = gameData.game();
@@ -145,36 +145,38 @@ public class webSocketHandler {
         if (username.equals(whiteUsername)) {
             isWhite = true;
             if (game.getTeamTurn() != ChessGame.TeamColor.WHITE) {
-                throw new Exception();
+                throw new Exception("It isn't your turn, white user on black turn");
             }
         }
         else if (username.equals(blackUsername)) {
             isBlack = true;
             if (game.getTeamTurn() != ChessGame.TeamColor.BLACK) {
-                throw new Exception();
+                throw new Exception("It isn't your turn, black user on white turn");
             }
         }
         else {
-            throw new Exception();
+            throw new Exception("You can't make a move as an observer");
         }
 
 
         if (game.isGameComplete()) {
-            throw new Exception();
+            throw new Exception("The game is already complete");
         }
         Collection<ChessMove> moves = game.validMoves(move.getStartPosition());
         if (!moves.contains(move)) {
-            throw new Exception();
+            throw new Exception("This is an illegal move");
         }
         if (isWhite & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.WHITE) {
-            throw new Exception();
+            throw new Exception("You are trying to move the wrong piece, white trying to move black piece");
         }
         else if (isBlack & game.getBoard().getPiece(move.getStartPosition()).getTeamColor() != ChessGame.TeamColor.BLACK) {
-            throw new Exception();
+            throw new Exception("You are trying ot move the wrong piece, black trying ot move white piece");
         }
 
         game.makeMove(move);
-
+        if (game.isGameComplete()) {
+            throw new Exception("Checkmate or Stalemate");
+        }
 
         GameData newGameData = new GameData(gameID, whiteUsername, blackUsername, gameData.gameName(), game);
         gameDAO.updateGame(newGameData);
@@ -194,7 +196,7 @@ public class webSocketHandler {
         Integer gameID = leave.getGameID();
         GameData gameData = gameDAO.getGame(gameID);
         if (gameData == null) {
-            throw new Exception();
+            throw new Exception("There is no game");
         }
         GameData newGameData = gameData;
         if (Objects.equals(gameData.whiteUsername(), username)) {
@@ -225,10 +227,10 @@ public class webSocketHandler {
         GameData newGameData = gameData;
         ChessGame game = newGameData.game();
         if (game.isGameComplete()) {
-            throw new Exception();
+            throw new Exception("The game is already complete");
         }
         if (!username.equals(gameData.whiteUsername()) & !username.equals(gameData.blackUsername())) {
-            throw new Exception();
+            throw new Exception("You can't resign if you are observing");
         }
         game.endGame();
         newGameData = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
