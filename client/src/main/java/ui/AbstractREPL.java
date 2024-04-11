@@ -126,39 +126,4 @@ public abstract class AbstractREPL implements NotificationHandler {
     private String getPieceColor(String piece) {
         return Character.isUpperCase(piece.charAt(0)) ? "\u001B[34m" : "\u001B[31m";
     }
-    public String[][] populateStartingChessboard() {
-        String[][] board = new String[8][8];
-
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                board[row][col] = " ";
-            }
-        }
-
-        board[7][0] = "R";
-        board[7][1] = "N";
-        board[7][2] = "B";
-        board[7][3] = "Q";
-        board[7][4] = "K";
-        board[7][5] = "B";
-        board[7][6] = "N";
-        board[7][7] = "R";
-        for (int col = 0; col < 8; col++) {
-            board[6][col] = "P";
-        }
-
-        board[0][0] = "r";
-        board[0][1] = "n";
-        board[0][2] = "b";
-        board[0][3] = "q";
-        board[0][4] = "k";
-        board[0][5] = "b";
-        board[0][6] = "n";
-        board[0][7] = "r";
-        for (int col = 0; col < 8; col++) {
-            board[1][col] = "p";
-        }
-
-        return board;
-    }
 }

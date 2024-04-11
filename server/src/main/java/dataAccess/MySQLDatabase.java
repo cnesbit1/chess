@@ -134,29 +134,6 @@ public class MySQLDatabase implements DataAccess {
         return null;
     }
 
-    public Collection<GameData> listGames() throws DataAccessException {
-        HashMap<Integer, GameData> listOfGames = new HashMap<>();
-        var statement = "SELECT gameid, whiteusername, blackusername, gamename, chessgame FROM games";
-        try (var connection = DatabaseManager.getConnection()) {
-            try (var preparedStatement = connection.prepareStatement(statement)) {
-                try (var resultSet = preparedStatement.executeQuery()) {
-                    while (resultSet.next()) {
-                        int gameid = resultSet.getInt("gameid");
-                        String whiteusername = resultSet.getString("whiteusername");
-                        String blackusername = resultSet.getString("blackusername");
-                        String gamename = resultSet.getString("gamename");
-                        ChessGame game = new Gson().fromJson(resultSet.getString("chessgame"), ChessGame.class);
-                        listOfGames.put(gameid, new GameData(gameid, whiteusername, blackusername, gamename, game));
-                    }
-                }
-            }
-            return listOfGames.values();
-        }
-        catch (SQLException e) {
-            throw new DataAccessException("Database Error");
-        }
-    }
-
     // Methods for auths
     public AuthData createAuth(String username) throws DataAccessException {
         var statement = "INSERT INTO auth (authtoken, username) VALUES (?, ?)";
@@ -291,27 +268,43 @@ public class MySQLDatabase implements DataAccess {
         }
     }
 
+    private GameData createGameDataFromResultSet(ResultSet resultSet) throws SQLException {
+        int gameid = resultSet.getInt("gameid");
+        String whiteusername = resultSet.getString("whiteusername");
+        String blackusername = resultSet.getString("blackusername");
+        String gamename = resultSet.getString("gamename");
+        ChessGame game = new Gson().fromJson(resultSet.getString("chessgame"), ChessGame.class);
+        return new GameData(gameid, whiteusername, blackusername, gamename, game);
+    }
+
     public Map<Integer, GameData> getAllGames() throws DataAccessException {
         HashMap<Integer, GameData> listOfGames = new HashMap<>();
         var statement = "SELECT gameid, whiteusername, blackusername, gamename, chessgame FROM games";
-        try (var connection = DatabaseManager.getConnection()) {
-            try (var preparedStatement = connection.prepareStatement(statement)) {
-                try (var resultSet = preparedStatement.executeQuery()) {
-                    while (resultSet.next()) {
-                        int gameid = resultSet.getInt("gameid");
-                        String whiteusername = resultSet.getString("whiteusername");
-                        String blackusername = resultSet.getString("blackusername");
-                        String gamename = resultSet.getString("gamename");
-                        ChessGame game = new Gson().fromJson(resultSet.getString("chessgame"), ChessGame.class);
-                        listOfGames.put(gameid, new GameData(gameid, whiteusername, blackusername, gamename, game));
-                    }
-                }
+        try (var connection = DatabaseManager.getConnection();
+             var preparedStatement = connection.prepareStatement(statement);
+             var resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                listOfGames.put(resultSet.getInt("gameid"), createGameDataFromResultSet(resultSet));
             }
-            return listOfGames;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             throw new DataAccessException("Database Error");
         }
+        return listOfGames;
+    }
+
+    public Collection<GameData> listGames() throws DataAccessException {
+        HashMap<Integer, GameData> listOfGames = new HashMap<>();
+        var statement = "SELECT gameid, whiteusername, blackusername, gamename, chessgame FROM games";
+        try (var connection = DatabaseManager.getConnection();
+             var preparedStatement = connection.prepareStatement(statement);
+             var resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                listOfGames.put(resultSet.getInt("gameid"), createGameDataFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Database Error");
+        }
+        return listOfGames.values();
     }
 
     public Map<String, UserData> getAllUsers() throws DataAccessException {
