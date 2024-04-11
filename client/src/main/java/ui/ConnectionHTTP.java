@@ -8,10 +8,10 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class connectionHTTP {
+public class ConnectionHTTP {
     public String baseURL;
     public String authToken;
-    public connectionHTTP(String authToken, String host, int port) {
+    public ConnectionHTTP(String authToken, String host, int port) {
         this.baseURL = String.format("http://%s:%s", host, port);
         this.authToken = authToken;
     }

@@ -1,7 +1,6 @@
 package ui;
 
 import com.google.gson.Gson;
-import model.GameData;
 import webSocketMessages.severMessages.LoadGame;
 import webSocketMessages.severMessages.Error;
 import webSocketMessages.severMessages.Notification;
@@ -13,7 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @ClientEndpoint
-public class connectionWebSocket {
+public class ConnectionWebSocket {
 
     private Session session;
     public String baseURL;
@@ -24,7 +23,7 @@ public class connectionWebSocket {
     public NotificationHandler notificationGameplayHandler;
     public NotificationHandler notificationJoinGameHandler;
 
-    public connectionWebSocket(String authToken, String host, int port, NotificationHandler notificationGameplayHandler, NotificationHandler notificationJoinGameHandler) {
+    public ConnectionWebSocket(String authToken, String host, int port, NotificationHandler notificationGameplayHandler, NotificationHandler notificationJoinGameHandler) {
         try {
             this.authToken = authToken;
             this.baseURL = String.format("ws://%s:%s/connect", host, port);

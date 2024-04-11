@@ -18,13 +18,13 @@ import java.util.Collection;
 import java.util.Objects;
 
 @WebSocket
-public class webSocketHandler {
+public class WebSocketHandler {
     private final ConnectionManager connectionManager;
     private final AuthDAO authDAO;
     private final GameDAO gameDAO;
 
 
-    public webSocketHandler(AuthDAO authDAO, GameDAO gameDAO) {
+    public WebSocketHandler(AuthDAO authDAO, GameDAO gameDAO) {
         this.authDAO = authDAO;
         this.gameDAO = gameDAO;
         this.connectionManager = new ConnectionManager();

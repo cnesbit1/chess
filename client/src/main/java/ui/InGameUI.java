@@ -13,11 +13,9 @@ import webSocketMessages.userCommands.Resign;
 
 import java.util.Objects;
 
-import static chess.ChessPiece.PieceType.ROOK;
+public class InGameUI extends AbstractREPL {
 
-public class inGameUI extends abstractREPL {
-
-    private enum optionsUI {
+    private enum OptionsUI {
         REDRAWCHESSBOARD(1, "redraw the chess board"),
         LEAVE(2, "leave"),
         MAKEMOVE(3, "make a move"),
@@ -25,7 +23,7 @@ public class inGameUI extends abstractREPL {
         HIGHLIGHTLEGALMOVES(5, "highlight legal moves");
         private final int number;
         private final String description;
-        optionsUI(int number, String description) {
+        OptionsUI(int number, String description) {
             this.number = number;
             this.description = description;
         }
@@ -35,7 +33,7 @@ public class inGameUI extends abstractREPL {
     public Notification notification;
     public Error error;
 
-    public inGameUI(switchUILoop programLoop, serverFacade serverWrapper) { super(programLoop, serverWrapper); }
+    public InGameUI(SwitchUILoop programLoop, ServerFacade serverWrapper) { super(programLoop, serverWrapper); }
     @Override
     public void processInput(String input) {
         try {
@@ -154,7 +152,7 @@ public class inGameUI extends abstractREPL {
     @Override
     public void showUIPrompt() {
         System.out.println("Give an input of 'help' for more possible instructions.");
-        for (inGameUI.optionsUI option : inGameUI.optionsUI.values()) {
+        for (OptionsUI option : OptionsUI.values()) {
             System.out.println("Enter " + option.number + " to " + option.description + ".");
         }
     }

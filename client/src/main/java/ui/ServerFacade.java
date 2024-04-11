@@ -12,12 +12,12 @@ import webSocketMessages.userCommands.JoinObserver;
 import webSocketMessages.userCommands.JoinPlayer;
 
 
-public class serverFacade {
-    public connectionHTTP conn;
-    public connectionWebSocket webConn;
+public class ServerFacade {
+    public ConnectionHTTP conn;
+    public ConnectionWebSocket webConn;
 
     public String username;
-    public serverFacade(connectionHTTP conn, connectionWebSocket webConn) {
+    public ServerFacade(ConnectionHTTP conn, ConnectionWebSocket webConn) {
         this.conn = conn;
         this.webConn = webConn;
     }

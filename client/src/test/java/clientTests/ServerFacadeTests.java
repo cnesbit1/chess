@@ -10,15 +10,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import model.AuthData;
-import ui.connectionHTTP;
-import ui.connectionWebSocket;
-import ui.serverFacade;
+import ui.ConnectionHTTP;
+import ui.ConnectionWebSocket;
+import ui.ServerFacade;
 
 class ServerFacadeTest {
     private Server server;
-    private serverFacade serverWrapper;
-    private connectionHTTP conn;
-    private connectionWebSocket webConn;
+    private ServerFacade serverWrapper;
+    private ConnectionHTTP conn;
+    private ConnectionWebSocket webConn;
 
     @BeforeEach
     public void init() throws Exception {
@@ -26,9 +26,9 @@ class ServerFacadeTest {
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
 
-        conn = new connectionHTTP(null, "localhost", port);
+        conn = new ConnectionHTTP(null, "localhost", port);
 //        webConn = new connectionWebSocket(null, "localhost", port);
-        this.serverWrapper = new serverFacade(conn, webConn);
+        this.serverWrapper = new ServerFacade(conn, webConn);
         this.serverWrapper.conn.sendDeleteRequest("/db", null);
     }
 

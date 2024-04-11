@@ -7,8 +7,8 @@ import webSocketMessages.severMessages.ServerMessage;
 
 import java.util.Collection;
 
-public class signedInUI extends abstractREPL {
-    private enum optionsUI {
+public class SignedInUI extends AbstractREPL {
+    private enum OptionsUI {
         LISTGAMES(1, "list games"),
         CREATEGAME(2, "create game"),
         JOINGAME(3, "join game"),
@@ -16,12 +16,12 @@ public class signedInUI extends abstractREPL {
         LOGOUT(5, "log out");
         private final int number;
         private final String description;
-        optionsUI(int number, String description) {
+        OptionsUI(int number, String description) {
             this.number = number;
             this.description = description;
         }
     }
-    public signedInUI(switchUILoop programLoop, serverFacade serverWrapper) {
+    public SignedInUI(SwitchUILoop programLoop, ServerFacade serverWrapper) {
         super(programLoop, serverWrapper);
     }
 
@@ -98,7 +98,7 @@ public class signedInUI extends abstractREPL {
     @Override
     public void showUIPrompt() {
         System.out.println("Give an input of 'help' for more possible instructions.");
-        for (signedInUI.optionsUI option : signedInUI.optionsUI.values()) {
+        for (OptionsUI option : OptionsUI.values()) {
             System.out.println("Enter " + option.number + " to " + option.description + ".");
         }
     }

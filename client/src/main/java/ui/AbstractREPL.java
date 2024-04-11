@@ -6,14 +6,14 @@ import chess.ChessPosition;
 
 import java.util.Scanner;
 
-public abstract class abstractREPL implements NotificationHandler {
+public abstract class AbstractREPL implements NotificationHandler {
     public static final Scanner scanner = new Scanner(System.in);
-    public switchUILoop programLoop;
-    public serverFacade serverWrapper;
+    public SwitchUILoop programLoop;
+    public ServerFacade serverWrapper;
     public boolean switchUI = false;
 
     public String username;
-    public abstractREPL(switchUILoop programLoop, serverFacade serverWrapper) {
+    public AbstractREPL(SwitchUILoop programLoop, ServerFacade serverWrapper) {
         this.programLoop = programLoop;
         this.serverWrapper = serverWrapper;
     }

@@ -3,23 +3,23 @@ import model.AuthData;
 import webSocketMessages.severMessages.ServerMessage;
 
 import java.lang.Exception;
-public class signedOutUI extends abstractREPL {
+public class SignedOutUI extends AbstractREPL {
 
 
-    private enum optionsUI {
+    private enum OptionsUI {
         REGISTER(1, "register"),
         LOGIN(2, "login");
 
         private final int number;
         private final String description;
 
-        optionsUI(int number, String description) {
+        OptionsUI(int number, String description) {
             this.number = number;
             this.description = description;
         }
     }
 
-    public signedOutUI(switchUILoop programLoop, serverFacade serverWrapper) {
+    public SignedOutUI(SwitchUILoop programLoop, ServerFacade serverWrapper) {
         super(programLoop, serverWrapper);
     }
 
@@ -75,7 +75,7 @@ public class signedOutUI extends abstractREPL {
     public void showUIPrompt() {
         System.out.println("Give an input of 'quit' to terminate this program.");
         System.out.println("Give an input of 'help' for more possible instructions.");
-        for (optionsUI option : optionsUI.values()) {
+        for (OptionsUI option : OptionsUI.values()) {
             System.out.println("Enter " + option.number + " to " + option.description + ".");
         }
     }
