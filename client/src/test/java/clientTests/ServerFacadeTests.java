@@ -1,8 +1,5 @@
 package clientTests;
 
-import chess.ChessGame;
-import model.GameData;
-import org.junit.jupiter.api.*;
 import server.Server;
 
 
@@ -13,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import model.AuthData;
-import responses.ListGames;
 import ui.connectionHTTP;
 import ui.connectionWebSocket;
 import ui.serverFacade;
