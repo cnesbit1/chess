@@ -74,6 +74,7 @@ public class ServerFacade {
             Gson gson = new Gson();
             String joinPlayerJson = gson.toJson(joinPlayer);
             webConn.sendMessage(joinPlayerJson);
+
         }
     }
 }

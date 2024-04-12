@@ -15,7 +15,7 @@ import java.util.Objects;
 @ClientEndpoint
 public class ConnectionWebSocket {
 
-    private Session session;
+    public Session session;
     public String baseURL;
     public String authToken;
 
@@ -31,7 +31,7 @@ public class ConnectionWebSocket {
             this.notificationGameplayHandler = notificationGameplayHandler;
             this.notificationJoinGameHandler = notificationJoinGameHandler;
             this.firstLoadGame = true;
-            onMessage("hi");
+//            onMessage("hi");
 
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             container.connectToServer(this, new URI(this.baseURL));
@@ -46,9 +46,30 @@ public class ConnectionWebSocket {
     public void setNotificationGameplayHandler(NotificationHandler notificationGameplayHandler) { this.notificationGameplayHandler = notificationGameplayHandler; }
     public void setNotificationJoinGameHandler(NotificationHandler notificationJoinGameHandler) { this.notificationJoinGameHandler = notificationJoinGameHandler; }
 
+    @OnOpen
+    public void onOpen(Session session) {
+        System.out.println("Connected to server");
+        this.session = session;
+    }
+
+    @OnClose
+    public void onClose(Session session, CloseReason closeReason) {
+        System.out.println("Disconnected from server: " + closeReason.getReasonPhrase());
+        this.session = null;
+    }
+
+    public void close() {
+        if (session != null && session.isOpen()) {
+            try {
+                session.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     @OnMessage
     public void onMessage(String message) {
-        if (Objects.equals(message, "hi")) { return; }
+//        if (Objects.equals(message, "hi")) { return; }
         Gson gson = new Gson();
         ServerMessage serverMessage = gson.fromJson(message, ServerMessage.class);
         ServerMessage.ServerMessageType type = serverMessage.getServerMessageType();
@@ -72,7 +93,7 @@ public class ConnectionWebSocket {
     }
 
     public void sendMessage(String message) {
-        if (session != null && session.isOpen()) {
+        if (this.session != null && session.isOpen()) {
             try {
                 session.getBasicRemote().sendText(message);
             } catch (IOException e) {
